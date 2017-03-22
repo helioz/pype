@@ -1,0 +1,65 @@
+August 1, 2016 ================================
+
+Team for project was formed
+Project team includes:
+Jerry Raju
+Raeesul Asad
+Shamnas T. V.
+Soorej Jones Pothoor
+==============================================
+
+August 3,2016 ================================
+
+It was decided to make a decentralieds video messenger over
+a p2p network. Further studies were done to see if there were any obvious obstacles.
+=============================================
+
+August 4,2016===============================
+
+Salim A. of Department of CSE was selected as the project guide.
+Contacted Salim and obtained his consent.
+============================================
+
+August 5,2016===============================
+
+An abstract was prepared and turned in for further evaluation.
+===========================================
+
+August 6,2016==============================
+
+Reference papers for DHT and bittorrent protocols were obtained.
+============================================
+
+August 28,2016==============================
+
+Peer-to-Peer Communication Across Network Address Translators - Bryan Ford, Pyda Srisuresh - A paper on hole punching for UDP and TCP to access peers behind a NAT was found.
+===========================================
+
+October 17,2016============================
+
+Divided the work between teammates.
+Jerry and Asad volunteered to work on multimedia encoding.
+Shamnas and Soorej handles networking.
+===========================================
+
+November 7,2016============================
+
+Started working on project design report and feasibility study.
+===========================================
+
+November 9, 2016===========================
+
+Submitted first draft of project design and presented the idea before a panel.
+===========================================
+
+November 14,2016===========================
+
+Started working on the second draft of project design. Made control flow diagrams and class diagrams.
+===========================================
+
+November 17, 2016==========================
+
+Submitted improved project design.
+===========================================
+
+

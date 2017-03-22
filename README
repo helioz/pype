@@ -5,17 +5,26 @@ An open source peer to peer video chatting platform.
 
 Design choices
 ==================================================
-
+UX design using gtk
+Languages to use: python, and java
+Python, because most p2p libraries use python
+Java, because we would like to learn it better.
 
 
 git commands
 =================================================
+Initial commit
 git init
 git add <filename>
 git commit -m "Commit message"
 git remote add origin https://github.com/helioz/pype.git
 git push -u origin master
 
+
+Regular commits
+git add <filename>
+git commit -m "Commit message"
+git push -u origin master
 
 Development guidelines:
 ==================================================
