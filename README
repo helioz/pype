@@ -1,2 +1,28 @@
-pype:
+pype
+===================================================
 An open source peer to peer video chatting platform.
+
+
+Design choices
+==================================================
+
+
+
+git commands
+=================================================
+git init
+git add <filename>
+git commit -m "Commit message"
+git remote add origin https://github.com/helioz/pype.git
+git push -u origin master
+
+
+Development guidelines:
+==================================================
+*All libraries are to be confined to categories NetworkLib, AVLib, CryptoLib, and UXLib
+
+*All resources are to be included in the 'Resources' folder.
+
+*All documentation is to be inserted into the Documentations folder.
+
+*All code relating to the holepunch server is to be added in the 'pypeServer' folder.
