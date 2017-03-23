@@ -2,8 +2,8 @@ from gi.repository import Gtk
 
 
 class MainWindow(Gtk.ApplicationWindow):
-    def __init__(self):
-        Gtk.Window.__init__(self, title = "pype v0.0.1")
+    def __init__(self, window_title):
+        Gtk.Window.__init__(self, title = window_title)
 
 
 class HomeScreen(Gtk.Box):
@@ -31,12 +31,12 @@ class CallScreenBox(Gtk.Box):
 
 
 
-
-window = MainWindow()
-window.connect("delete-event", Gtk.main_quit)
-#window.add(label)
-callScreen = CallScreenBox()
-
-window.add(callScreen)
-window.show_all()
-Gtk.main()
+def UX(window_title):
+    window = MainWindow(window_title)
+    window.connect("delete-event", Gtk.main_quit)
+    #window.add(label)
+    callScreen = CallScreenBox()
+    
+    window.add(callScreen)
+    window.show_all()
+    Gtk.main()
