@@ -47,12 +47,12 @@ class CryptoHandler:
         ##Encrypts signatureC plaintext string with current private key
 
         #Fix signatureP to be a bytestring
-        
+        signatureC = rsaEncrypt(signatureP,(self.cur_key.d,self.cur_key.n))
         return string(signatureC)
     
     def decryptSignature(self, signatureC, d_key):
         ##Decrypts signatureC cyphertext string using d_key
-        
+        signatureP = rsaDecrypt(signatureC,d_key)
         return string(signatureP)
     
     def encryptAVString(self, AV_encode_string_d,e_key):
