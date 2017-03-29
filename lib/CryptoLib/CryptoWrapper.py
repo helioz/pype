@@ -11,35 +11,6 @@ import pickle
 
 Key_Size = 1024
 
-# #random_generator = Random.new().read
-# #key = RSA.generate(1024, random_generator) #generate pub and priv key
-
-# #publickey = key.publickey() # pub key export for exchange
-
-# encrypted = publickey.encrypt('encrypt this message', 32)
-# #message to encrypt is in the above line 'encrypt this message'
-
-# print 'encrypted message:', b64.b64encode(encrypted[0]) #ciphertext
-# f = open ('encryption.txt', 'w')
-# f.write(b64.b64encode(encrypted[0])) #write ciphertext to file
-# f.close()
-
-# #decrypted code below
-
-# f = open('encryption.txt', 'r')
-# message = f.read()
-
-# encrypted = b64.b64decode(message)
-
-
-# decrypted = key.decrypt(encrypted)
-
-# print 'decrypted', decrypted
-
-# f = open ('encryption.txt', 'w')
-# f.write(str(message))
-# f.write(str(decrypted))
-# f.close()
 
 class CryptoHandler:
     def __init__(self):
@@ -107,26 +78,4 @@ class CryptoHandler:
         pass
 
 
-c = CryptoHandler()
-print c.decryptSignature(c.generateSignature("Hello, a string"),c.cur_key.publickey())
 
-
-# random_generator = Random.new().read
-# key = RSA.generate(1024, random_generator) #generate pub and priv key
-
-
-# msg = 'Attack at eastern frontier'
-# keyPub = key.publickey()
-# keyPub.e = key.d
-
-# print keyPub.e
-
-# cipher = PKCS1_OAEP.new(keyPub)
-# ciphertext = cipher.encrypt(msg)
-
-# print b64.b64encode(ciphertext)
-# keyPub = key.publickey()
-
-# msg1 = cipher.decrypt(ciphertext)
-
-# print msg1
