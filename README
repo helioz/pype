@@ -34,7 +34,7 @@ Development guidelines:
 
 *All documentation is to be inserted into the Documentations folder.
 
-*All code relating to the holepunch server is to be added in the 'pypeServer' folder.
+*All code relating to the support server is to be added in the 'pypeServer' folder.
 
 A list of available STUN server.
 =====================================
@@ -57,3 +57,8 @@ stun.voipbuster.com
 stun.voipstunt.com
 stun.voxgratia.org
 stun.xten.com
+
+
+Reading materials and guides
+======================================
+ICE - https://tools.ietf.org/html/rfc5245
