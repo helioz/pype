@@ -1,5 +1,0 @@
-from gi.repository import Gtk
-
-window = Gtk.window()
-window.show_all()
-Gtk.main()
