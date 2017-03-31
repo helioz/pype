@@ -39,5 +39,20 @@ class p2p:
             p.sendTCP(ctrlString)
             p.sendTCP(data_bStream)
             p.destroyTCP()
+
+class SupportServer:
+    def __init__(self, ip_addr, port_holePunch, port_getPeer):
+        self.ip_addr = ip_addr
+        self.port_holePunch = port_holePunch
+        self.port_getPeer = port_getPeer
+    def getFirstPeer(self):
+        #Return net_addr of first peer to connect to network
+        return net_addr
+
+    def connect2peer(self, net_addr):
+        #Function to connect to peer, return true or false. 
+
+    
+        
         
         
