@@ -6,8 +6,10 @@ class AVHandler:
 
     def displayAV(self, AV_encode_string):
         ##Data recieved from NetworkHandler
+        return
 
     def captureAV(self):
         ##Captures AV from device and sends it to network via NetworkHandler.sendAV(AV_encode_string)
+        return
 
         

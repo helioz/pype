@@ -5,8 +5,7 @@ from Crypto.Hash import SHA256
 import base64 as b64
 import pickle
 import RSAWrapper as RSA
-
-
+from Resources import _globals as GLOBALS
 
 Key_Size = 2048
 
@@ -17,7 +16,7 @@ class CryptoHandler:
     def __init__(self):
         self.key_ring = []
         try:
-            with open ('key_ring.binary', 'rb') as fp:
+            with open (GLOBALS.key_ring_binary, 'rb') as fp:
                 self.key_ring = pickle.load(fp)
         except IOError:
             self.generateNewKeys()
@@ -30,7 +29,7 @@ class CryptoHandler:
         
         key = RSA.generate(Key_Size) #generate pub and priv key
         self.key_ring.append(key)
-        with open('key_ring.binary', 'wb') as fp:
+        with open(GLOBALS.key_ring_binary, 'wb') as fp:
             pickle.dump(self.key_ring, fp)
 
     def setCurKey(self, keyIndex):
@@ -83,12 +82,12 @@ class CryptoHandler:
     def private_key(self):
         return self.cur_key[1]
 
-
-
-c = CryptoHandler()
-c.generateNewKeys()
-c.setCurKey(2)
-print c.sha256("Hello")
-print c.decryptSignature(c.generateSignature("Hello"),c.public_key())
-print c.rsaDecrypt(c.rsaEncrypt("Hello",c.public_key()))
+if __name__ == '__main__':
+    #For testing
+    c = CryptoHandler()
+    c.generateNewKeys()
+    c.setCurKey(2)
+    print c.sha256("Hello")
+    print c.decryptSignature(c.generateSignature("Hello"),c.public_key())
+    print c.rsaDecrypt(c.rsaEncrypt("Hello",c.public_key()))
 

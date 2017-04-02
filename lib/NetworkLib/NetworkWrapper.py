@@ -18,6 +18,7 @@ C_203 = b'203:NODE_ADDR_READY'
 C_204 = b'204:REQ_SUCCESS'
 
 C_301 = b'301:GET_PEER_LIST'
+C_302 = b'302:NO_PEER'
 
 C_401 = b'401:NEW_PEER_REQ'
 C_402 = b'402:READY_FOR_NEW_PEER'
@@ -46,25 +47,26 @@ class NetworkHandler:
 
     def getFirstPeer(self):
         ##Returns the net_addr of first peer returned by support server
-
+        return
     def connect2peer(self, net_addr):
         ##Hole punches a connection to a peer, returns true or false
-
+        return
 
     def getPeerList(self, net_addr):
         ##Returns a peer_list from selected peer.
-        
+        return
 
     def getAddrBook(self, net_addr):
         ##Returns AddrBook of selected peer
-
+        return
     def pushAddrBook(self):
         ##Broadcasts updates to AddrBook
-        
+        return
     def callPeer(self,net_addr):
         ##Used to call a peer.
-
+        return
     def sendAV(self, AV_encode_string):
         ##Called by AV Handler to send AV
+        return
     
     

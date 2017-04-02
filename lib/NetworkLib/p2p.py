@@ -10,6 +10,7 @@ class Peer:
 
     def sendUDP(self, data_bStream):
         ## Function to send UDP packet to peer
+        return
 
     def recieveUDP(self):
         ## Function to recieve UDP packets
@@ -17,15 +18,16 @@ class Peer:
 
     def createTCPStream(self):
         ##Creates a TCP Stream to self node
-
+        return
     def sendTCP(self, data_bStream):
         ##Sends data_bStream to node via tcpStream
+        return
     def recieveTCP(self):
         ##Recieves TCP packets from tcpStream
         return data_bStream
     def destroyTCP(self):
         ##Closes TCP stream
-    
+        return
     
 class P2PNetwork:
     def __init__(self):
@@ -49,10 +51,10 @@ class SupportServer:
 
     def sendUDP(self, packet):
         ##Send UDP packet to server
-
+        return
     def recieveUDP(self, packet):
         ##Recieve UDP packet from server
-
+        return
     
     
         
