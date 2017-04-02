@@ -342,14 +342,10 @@
                 <property name="margin_bottom">40</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkComboBoxText" id="contactsCBox">
-                    <property name="width_request">195</property>
+                  <object class="GtkComboBoxText" id="comboboxtext1">
+                    <property name="width_request">141</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">38</property>
-                    <property name="margin_right">38</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -363,8 +359,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
                     <property name="margin_left">10</property>
                     <property name="margin_right">10</property>
                     <property name="margin_top">10</property>

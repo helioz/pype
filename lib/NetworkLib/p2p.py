@@ -1,5 +1,5 @@
 ##Peer2peer library for establishing peer connection and send and recieve data
-
+import Resources._globals as GLOBALS
 
 class Peer:
     def __init__(self, net_addr, sym_key):
@@ -44,10 +44,10 @@ class P2PNetwork:
             p.destroyTCP()
 
 class SupportServer:
-    def __init__(self, ip_addr, port_holePunch, port_getPeer):
-        self.ip_addr = ip_addr
-        self.port_holePunch = port_holePunch
-        self.port_getPeer = port_getPeer
+    def __init__(self, ):
+        self.ip_addr = GLOBALS.IPADDR_support_server
+        self.port_holePunch = GLOBALS.PORT_Node
+        self.port_getPeer = GLOBALS.PORT_support_server_get_peer
 
     def sendUDP(self, packet):
         ##Send UDP packet to server

@@ -4,6 +4,7 @@
 #Control strings
 import p2p
 
+
 C_101 = b'101:NACK'
 C_102 = b'102:ACK'
 C_103 = b'103:CLOSE_CONNECTION'
@@ -40,10 +41,10 @@ C_805 = b'803:READY_TO_RECV'
 C_806 = b'804:DISCONNECT_CALL'
 
 class NetworkHandler:
-    def __init__(self, support_server_ip_addr, support_server_holePunchPort, support_server_getPeerPort):
+    def __init__(self):
         self.peer_list = [] ##peer_list is a dictionary that contains net_addr and control flags of peers
-        self.network = P2PNetwork()
-        self.supportServer = p2p.SupportServer(support_server_ip_addr, support_server_holePunch, support_server_getPeerPort)
+        self.network = p2p.P2PNetwork()
+        self.supportServer = p2p.SupportServer()
 
     def getFirstPeer(self):
         ##Returns the net_addr of first peer returned by support server

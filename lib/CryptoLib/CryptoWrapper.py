@@ -29,9 +29,14 @@ class CryptoHandler:
         
         key = RSA.generate(Key_Size) #generate pub and priv key
         self.key_ring.append(key)
-        with open(GLOBALS.key_ring_binary, 'wb') as fp:
-            pickle.dump(self.key_ring, fp)
-
+        try:
+            with open(GLOBALS.key_ring_binary, 'wb') as fp:
+                pickle.dump(self.key_ring, fp)
+            print "New key added to key_ring"
+        except IOError:
+            print "IOError"
+            return False
+        return True
     def setCurKey(self, keyIndex):
         self.cur_key = self.key_ring[keyIndex]
         

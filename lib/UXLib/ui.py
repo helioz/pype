@@ -2,7 +2,7 @@ import gi
 import Resources._globals as GLOBAL
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import lib.DataStructures.Structures as dataS
+import lib.DataStructures.common as common
 
 class Handler:
     def onDeleteWindow(self, *args):
@@ -12,10 +12,11 @@ class Handler:
         
 
 class UI():
-    def __init__(self):
+    def __init__(self, core):
         self.builder = Gtk.Builder()
         self.builder.add_from_file("lib/UXLib/ui.glade")
-    
+        self.pype = core
+        
         self.builder.connect_signals(Handler())
 
         self.HomeScreen = self.builder.get_object("HomeScreen")
@@ -34,25 +35,38 @@ class UI():
         self.AddContactButton.connect("clicked", self.AddContactToList)
         self.AddContactWindowLaunchButton = self.builder.get_object("AddContact")
         self.AddContactWindowLaunchButton.connect("clicked", self.LaunchWindow, self.AddContactScreen)
+        self.contactCBox = self.builder.get_object("contactsCBox")
+        
         self.dialogOK = self.builder.get_object("button2")
         self.dialogOK.connect("clicked",self.CloseErrorWindow)
-
+        self.genNewKeys = self.builder.get_object("GenNewKeys")
+        self.genNewKeys.connect("clicked", self.GenNewKeys)
+        #common.fillContactCBox(self.contactCBox, self.cell)
 
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
-       
+        
         #AddContactScreen.show_all()
         #CallingScreen.show_all()
         #IncomingCallScreen.show_all()
         self.HomeScreen.show_all()
         Gtk.main()
 
+    def GenNewKeys(self, button):
+        if self.pype.crypto.generateNewKeys():
+            self.ShowMessage("Pype","Key pair generated successfully")
+        else:
+            self.ShowMessage("Pype","Key generation failed")
+
+            
     def CloseErrorWindow(self, button):
         self.ErrorWindow.hide()
 
     def AddContactToList(self, button):
-        c = dataS.Contact(self.nameEntry.get_text(), self.pubKeyeEntry.get_text(), self.pubKeynEntry.get_text() )
+        c = common.Contact(self.nameEntry.get_text(), self.pubKeyeEntry.get_text(), self.pubKeynEntry.get_text() )
         self.AddContactScreen.hide()
         self.ShowMessage("Success","Contact successfully added")
+        common.saveContact(c)
+        
 
         return
 
@@ -63,3 +77,4 @@ class UI():
 
     def LaunchWindow(self, button, window):
         window.show_all()
+
