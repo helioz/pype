@@ -43,6 +43,15 @@ class UI():
         self.genNewKeys.connect("clicked", self.GenNewKeys)
         #common.fillContactCBox(self.contactCBox, self.cell)
 
+        self.loadKeyCB = self.builder.get_object("loadKeyCB")
+        self.key_store = Gtk.ListStore(str)
+        i = 1
+        for key in self.pype.crypto.key_ring:
+            #self.key_store.append(["key pair "+str(i)])
+            self.loadKeyCB.insert_text(i, "key pair "+str(i))
+            i = i+1
+        self.loadKeyCB.set_entry_text_column(1)
+        
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
         
         #AddContactScreen.show_all()
