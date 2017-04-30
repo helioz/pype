@@ -49,16 +49,16 @@ class CryptoHandler:
 
     def generateSignature(self, signatureP):
         ##Encrypts signatureC plaintext string with current private key
-
+        
         #Fix signatureP to be a bytestring
-        signatureC = RSA.encryptSignature(signatureP,self.cur_key[1])
+        signatureC = RSA.encryptSignature(pickle.dumps(signatureP),self.cur_key[1])
         return b64.b64encode(signatureC)
     
     def decryptSignature(self, signatureC, public_key):
         ##Decrypts signatureC cyphertext string using d_key
         nonb64 = b64.b64decode(signatureC)
         signatureP = RSA.decryptSignature(nonb64,public_key)
-        return signatureP
+        return pickle.loads(signatureP)
 
     def rsaEncrypt(self, cleartext, public_key):
         #Encrypts cleartext with corresponding public_key

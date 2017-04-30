@@ -9,7 +9,9 @@ def testCrypto():
     print c.public_key().e
     print c.public_key().n
     print c.private_key().d
-    c.toPubKey(12,700)
+    d = c.toPubKey(12,700)
+    print d.n
+    print d.e
     print c.sha256("Hello")
     if "MTg1ZjhkYjMyMjcxZmUyNWY1NjFhNmZjOTM4YjJlMjY0MzA2ZWMzMDRlZGE1MTgwMDdkMTc2NDgyNjM4MTk2OQ==" == c.sha256("Hello"):
         print "SHA256 passed"
@@ -25,7 +27,7 @@ def testCrypto():
     if "Hello" ==  c.rsaDecrypt(c.rsaEncrypt("Hello",c.public_key())):
         print "RSA Encryption/Decryption successful"
     else:
-        print "RSA Encryption/Decryption successful"
+        print "RSA Encryption/Decryption failed"
         
 
 def testNetwork():
