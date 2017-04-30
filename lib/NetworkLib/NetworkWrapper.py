@@ -26,15 +26,13 @@ class NetworkHandler:
                 
                 peer = p2p.Peer(addr, 0)
 
-                while i < 5:
-                    if self.connect2peer(peer):
-                       
-                        f = 1
-                        break
-                    i = i-1
+                if self.connect2peer(peer):
+                    f = 1
+                    break
+                    
             t = t - 1
         if f == 0:
-            print "No peer found"
+            print "No peers found"
             return False
         else:
             return True
@@ -42,10 +40,20 @@ class NetworkHandler:
             
             
     def connect2peer(self, peer):
-        if self.supportServer.holePunchPeer(peer):
-             self.peer_list.append((peer, 0))
-             self.network.addNode(peer)
-        
+        t = 5
+        f = 0
+        while (not f) and t>0:
+            if peer.makeConnection():
+                f = 1
+                break
+            t = t - 1
+        if f == 1:
+            self.peer_list.append((peer, 0))
+            self.network.addNode(peer)
+            return True
+        else:
+            print "Failed to connec to node"
+            return False
         ##Hole punches a connection to a peer, returns true or false
 
         
@@ -84,7 +92,7 @@ class NetworkHandler:
         self.network.pushBroadcast(pickle.dumps(AddrBookDelta), G.C_701, G.C_702)
         return
     
-    def callPeer(self, net_addr, pub_key_hash_self, pu_key_hash_other):
+    def callPeer(self, net_addr, pub_key_hash_self, pub_key_hash_other):
         ##Used to call a peer.
         for p in self.network.nodeList:
             if p.session_endpoints == net_addr:
@@ -101,11 +109,15 @@ class NetworkHandler:
                 else:
                     print "Call rejected"
 
-        print "Address not a peer"
-        self.
-        return
-    def sendAV(self, AV_encode_string, peer):
-        ##Called by AV Handler to send AV
-        return
+        print "Address not a peer. Trying to establish connection"
+        peer = p2p.Peer(net_addr,0)
+        
+        if self.connect2peer(peer):
+            return self.callPeer(net_addr, pub_key_hash_self,pub_key_hash_other)
+        else:
+            print "Peer does not exist"
+            return
+        
+
     
     

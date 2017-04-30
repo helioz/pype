@@ -9,6 +9,10 @@ class Peer:
         self.tcpStream = 0 #Stream object
         self.symKey = sym_key
 
+    def makeConnection(self):
+        ##Hole punches a connection to peer and returns true
+        return
+
     def sendMediaPacket(self, data_bStream):
         ## Function to send UDP packet to peer
         return
@@ -71,8 +75,6 @@ class SupportServer:
         return packet
         ##Recieve UDP packet from server
         return
-    def holePunchPeer(self, peer):
-        #return True once connection is established
     
     
         
