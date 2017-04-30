@@ -6,6 +6,7 @@ import base64 as b64
 import pickle
 import RSAWrapper as RSA
 from Resources import _globals as GLOBALS
+import rsa.key as rsaKey
 
 Key_Size = GLOBALS.key_size
 
@@ -86,12 +87,17 @@ class CryptoHandler:
         return self.cur_key[0]
     def private_key(self):
         return self.cur_key[1]
+    def toPubKey(self, keyE, keyN):
+        pub_key = rsaKey.PublicKey(keyN, keyE)
+        return pub_key
+        
 
 if __name__ == '__main__':
     #For testing
     c = CryptoHandler()
     c.generateNewKeys()
     c.setCurKey(2)
+    toPubKey(13,700)
     print c.sha256("Hello")
     print c.decryptSignature(c.generateSignature("Hello"),c.public_key())
     print c.rsaDecrypt(c.rsaEncrypt("Hello",c.public_key()))

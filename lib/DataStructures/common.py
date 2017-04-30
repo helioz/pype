@@ -33,7 +33,7 @@ class Contact:
 class Pype:
     def __init__(self):
         self.crypto = CryptoHandler()
-        self.network = NetworkHandler()
+        self.network = NetworkHandler(self.crypto)
     
     
 

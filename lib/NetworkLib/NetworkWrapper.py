@@ -8,10 +8,12 @@ import pickle
 
 
 class NetworkHandler:
-    def __init__(self):
+    def __init__(self, crypto):
         self.peer_list = [] ##peer_list is a dictionary that contains net_addr and control flags of peers
         self.network = p2p.P2PNetwork()
         self.supportServer = p2p.SupportServer()
+        self.AddrBook = [("hash_address","encrypted_signature")]
+        self.crypto = crypto
 
     def getFirstPeer(self):
         ##Returns the net_addr of first peer returned by support server
@@ -73,7 +75,7 @@ class NetworkHandler:
         return False
 
     def getAddrBook(self, peer):
-        ##Returns AddrBook of selected peer
+        ##Adds AddrBook of selected peer as current AddrBook
         peer.sendTextPacket(G.C_601)
         f = 0
         t = 5
@@ -83,7 +85,8 @@ class NetworkHandler:
                 addr_book = pickle.loads(peer.recieveTextPacket())
                 peer.sendTextPacket(G.C_102)
                 f = 1
-                return peer_list
+                self.AddrBook = addr_book
+                return
             t = t -1 
         return
 
@@ -92,8 +95,13 @@ class NetworkHandler:
         self.network.pushBroadcast(pickle.dumps(AddrBookDelta), G.C_701, G.C_702)
         return
     
-    def callPeer(self, net_addr, pub_key_hash_self, pub_key_hash_other):
+    def callPeer(self, contact):
         ##Used to call a peer.
+        ##Obtain peer address
+        pub_key_hash_other = crypto.sha256(str(contact.keyN) + str(contact.keyE))
+        for ad in self.AddrBook:
+            if ad[0] == pub_key_hash_other:
+                sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN))
         for p in self.network.nodeList:
             if p.session_endpoints == net_addr:
                 p.sendTextPacket(G.C_801)
@@ -117,7 +125,20 @@ class NetworkHandler:
         else:
             print "Peer does not exist"
             return
-        
+
+    def ThreadListener(self, peer):
+        while True:
+            packet = peer.recieveTextPacket()
+            if packet == G.C_501:
+                peer.sendTextPacket(G.C_102)
+                peer.sendTextPacket(pickle.dumps(self.peer_list))
+                while peer.recieveTextPacket() != G.C_102:
+                    peer.sendTextPacket(pickle.dumps(self.peer_list))
+            elif packet == G.C_601:
+                peer.sendTextPacket(G.C_602)
+                
+                
+                    
 
     
     

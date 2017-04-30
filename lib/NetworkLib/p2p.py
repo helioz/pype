@@ -65,8 +65,8 @@ class P2PNetwork:
 class SupportServer:
     def __init__(self, ):
         self.ip_addr = GLOBALS.IPADDR_support_server
-        self.port_holePunch = GLOBALS.PORT_Node
-        self.port_getPeer = GLOBALS.PORT_support_server_get_peer
+        #self.port_holePunch = GLOBALS.PORT_Node
+        #self.port_getPeer = GLOBALS.PORT_support_server_get_peer
 
     def sendUDP(self, packet):
         ##Send UDP packet to server

@@ -1,4 +1,4 @@
-import lib.AVLib.AVWrapper
+#import lib.AVLib.AVWrapper
 import lib.NetworkLib.NetworkWrapper
 from lib.CryptoLib.CryptoWrapper import CryptoHandler
 
@@ -9,6 +9,7 @@ def testCrypto():
     print c.public_key().e
     print c.public_key().n
     print c.private_key().d
+    c.toPubKey(12,700)
     print c.sha256("Hello")
     if "MTg1ZjhkYjMyMjcxZmUyNWY1NjFhNmZjOTM4YjJlMjY0MzA2ZWMzMDRlZGE1MTgwMDdkMTc2NDgyNjM4MTk2OQ==" == c.sha256("Hello"):
         print "SHA256 passed"
@@ -25,6 +26,7 @@ def testCrypto():
         print "RSA Encryption/Decryption successful"
     else:
         print "RSA Encryption/Decryption successful"
+        
 
 def testNetwork():
     return True
@@ -32,3 +34,5 @@ def testNetwork():
 def run_diag():
     testCrypto()
     testNetwork()
+
+#run_diag()
