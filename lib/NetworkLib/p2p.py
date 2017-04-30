@@ -1,21 +1,35 @@
 ##Peer2peer library for establishing peer connection and send and recieve data
 import Resources._globals as GLOBALS
+import socket
 
 class Peer:
     def __init__(self, net_addr, sym_key):
         self.session_endpoints = net_addr
         ## net_addr contains session endpoints and any other details to establish connection
         self.tcpStream = 0 #Stream object
-        self.symKey = sym_key 
+        self.symKey = sym_key
+        
 
-    def sendUDP(self, data_bStream):
+    def sendMediaPacket(self, data_bStream):
         ## Function to send UDP packet to peer
         return
 
-    def recieveUDP(self):
+    def recieveMediaPacket(self):
         ## Function to recieve UDP packets
         return data_bStream
 
+    def sendTextPacket(self, data_bStream):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(data_bStream, self.net_addr)
+        return
+    
+    def recieveTextPacket(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind(("",GLOBALS.PORT_Node))
+        data_bStream, addr = sock.recvfrom(GLOBALS.PORT_Node)
+                  
+        return data_bStream
+    
     def createTCPStream(self):
         ##Creates a TCP Stream to self node
         return
@@ -52,7 +66,8 @@ class SupportServer:
     def sendUDP(self, packet):
         ##Send UDP packet to server
         return
-    def recieveUDP(self, packet):
+    def recieveUDP(self):
+        return packet
         ##Recieve UDP packet from server
         return
     

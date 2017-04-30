@@ -6,6 +6,8 @@ from lib.NetworkLib.NetworkWrapper import NetworkHandler
 
 import pickle
 
+## struct net_addr (ip_addr, port)
+
 class AddrBook:
     ## struct AddrBook{ String hash_addr; String signature}
     def __init__(self):

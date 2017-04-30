@@ -7,7 +7,7 @@ import pickle
 import RSAWrapper as RSA
 from Resources import _globals as GLOBALS
 
-Key_Size = 2048
+Key_Size = GLOBALS.key_size
 
 
 

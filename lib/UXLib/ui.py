@@ -45,13 +45,8 @@ class UI():
 
         self.loadKeyCB = self.builder.get_object("loadKeyCB")
         self.key_store = Gtk.ListStore(str)
-        i = 1
-        for key in self.pype.crypto.key_ring:
-            #self.key_store.append(["key pair "+str(i)])
-            self.loadKeyCB.insert_text(i, "key pair "+str(i))
-            i = i+1
-        self.loadKeyCB.set_entry_text_column(1)
-        
+        self.fillkeyCB()
+        self.loadKeyCB.connect("changed", self.setKeyCBHandler)
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
         
         #AddContactScreen.show_all()
@@ -63,9 +58,26 @@ class UI():
     def GenNewKeys(self, button):
         if self.pype.crypto.generateNewKeys():
             self.ShowMessage("Pype","Key pair generated successfully")
+            self.loadKeyCB.insert(self.numKeys, str(self.numKeys), "Key Pair "+str(self.numKeys))
+            #self.loadKeyCB.destroy()
+            #self.HomeScreen.hide()
+            #self.HomeScreen.show_all()
         else:
             self.ShowMessage("Pype","Key generation failed")
 
+
+    def fillkeyCB(self):
+        self.numKeys = 0
+        for key in self.pype.crypto.key_ring:
+            #self.key_store.append(["key pair "+str(i)])
+            self.numKeys = self.numKeys + 1
+            self.loadKeyCB.insert(self.numKeys,str(self.numKeys), "Key Pair "+str(self.numKeys))
+            
+        self.loadKeyCB.set_entry_text_column(1)
+
+    def setKeyCBHandler(self, box):
+        keyIndex = int(self.loadKeyCB.get_active_text()) - 1
+        self.pype.crypto.setCurKey(keyIndex)
             
     def CloseErrorWindow(self, button):
         self.ErrorWindow.hide()
