@@ -8,7 +8,6 @@ class Peer:
         ## net_addr contains session endpoints and any other details to establish connection
         self.tcpStream = 0 #Stream object
         self.symKey = sym_key
-        
 
     def sendMediaPacket(self, data_bStream):
         ## Function to send UDP packet to peer
@@ -50,11 +49,13 @@ class P2PNetwork:
     def addNode(self, peer):
         self.nodeList.append(peer)
 
-    def pushBroadcast(self, data_bStream, ctrlString):
+    def pushBroadcast(self, data_bStream, ctrlString1, ctrlString2):
         for p in self.nodeList:
             p.createTCPStream()
             p.sendTCP(ctrlString)
-            p.sendTCP(data_bStream)
+            if p.recieveTCP() == ctrlString2:
+                p.sendTCP(data_bStream)
+                print "Successfully sent to ", p.session_endpoints
             p.destroyTCP()
 
 class SupportServer:
@@ -70,6 +71,8 @@ class SupportServer:
         return packet
         ##Recieve UDP packet from server
         return
+    def holePunchPeer(self, peer):
+        #return True once connection is established
     
     
         

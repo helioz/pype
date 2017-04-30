@@ -26,6 +26,9 @@ class Contact:
         self.keyE = keyE
         
         #self.hash_addr = crypto.generateHashAddr(keyE, keyN)
+##AddrBookDeltaDict {hashOfAddrDelta, AddrDelta}
+
+
 
 class Pype:
     def __init__(self):
