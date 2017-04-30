@@ -101,7 +101,7 @@ class NetworkHandler:
         pub_key_hash_other = crypto.sha256(str(contact.keyN) + str(contact.keyE))
         for ad in self.AddrBook:
             if ad[0] == pub_key_hash_other:
-                sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN))
+                sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature 
         for p in self.network.nodeList:
             if p.session_endpoints == net_addr:
                 p.sendTextPacket(G.C_801)
