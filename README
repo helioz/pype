@@ -62,3 +62,7 @@ stun.xten.com
 Reading materials and guides
 ======================================
 ICE - https://tools.ietf.org/html/rfc5245
+
+
+Required packages
+pyCrypto

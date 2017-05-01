@@ -17,9 +17,9 @@ key_size = 1024
 
 ##Network globals
 packet_maxsize = 4096
-punchTimeout = 2
-nOfIteration = 5
-waiting_time = 2
+punchTimeout = 10
+nOfIteration = 10
+waiting_time = 10
 
 #Network Codes
 
