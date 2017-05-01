@@ -14,24 +14,27 @@ class NetworkHandler:
         self.supportServer = p2p.SupportServer()
         self.AddrBook = [("hash_address","encrypted_signature")]
         self.crypto = crypto
+        self.AddrDeltaDict = ["hash"]
 
     def getFirstPeer(self):
         ##Returns the net_addr of first peer returned by support server
         f = 0
-        t = 5
+        t = G.nOfIteration
         while f == 0 and t > 0:
-            self.supportServer.sendUDP(G.C_401)
-            addr = self.supportServer.recieveUDP()
-            if addr[:7] == G.C_102:
-                self.supportServer.sendUDP(G.C_102)
+            self.supportServer.sendTextPacket(G.C_401)
+            addr = self.supportServer.recieveTextPacket()
+            if addr == None:
+                t = t - 1
+                continue
+            elif addr[:7] == G.C_102:
+                self.supportServer.sendTextPacket(G.C_102)
                 addr = addr[8:]
                 
                 peer = p2p.Peer(addr, 0)
 
                 if self.connect2peer(peer):
                     f = 1
-                    break
-                    
+                    break      
             t = t - 1
         if f == 0:
             print "No peers found"
@@ -42,7 +45,7 @@ class NetworkHandler:
             
             
     def connect2peer(self, peer):
-        t = 5
+        t = G.nOfIteration
         f = 0
         while (not f) and t>0:
             if peer.makeConnection():
@@ -54,7 +57,7 @@ class NetworkHandler:
             self.network.addNode(peer)
             return True
         else:
-            print "Failed to connec to node"
+            print "Failed to connect to node"
             return False
         ##Hole punches a connection to a peer, returns true or false
 
@@ -63,7 +66,7 @@ class NetworkHandler:
         ##Returns a peer_list from selected peer.
         peer.sendTextPacket(G.C_501)
         f = 0
-        t = 5
+        t = G.nOfIteration
         while f == 0 and t > 0:
             if peer.recieveTextPacket() == G.C_502:
                 peer.sendTextPacket(G.C_102)
@@ -126,6 +129,17 @@ class NetworkHandler:
             print "Peer does not exist"
             return
 
+    def addToAddrBook(self, AddrBookDelta):
+        f = 0
+        h = crypto.sha256(pickle.dumps(AddrBookDelta))
+        for t in self.AddrDeltaDict:
+            if t[0] == h:
+                f = 1
+        if f == 0:
+            self.AddrBook = self.AddrBook+AddrBookDelta
+            self.AddrDeltaDict.append(h)
+            self.pushAddrBookDelta(AddrBookDelta)
+                              
     def ThreadListener(self, peer):
         while True:
             packet = peer.recieveTextPacket()
@@ -134,8 +148,19 @@ class NetworkHandler:
                 peer.sendTextPacket(pickle.dumps(self.peer_list))
                 while peer.recieveTextPacket() != G.C_102:
                     peer.sendTextPacket(pickle.dumps(self.peer_list))
+            elif packet == G.C_701:
+                peer.sendTextPacket(G.C_702)
+                AddrBookDelta = pickle.loads(peer.recieveTextPacket())
+                addToAddrBook(AddrBookDelta)
+                print "Address Book delta updated"
+                
             elif packet == G.C_601:
                 peer.sendTextPacket(G.C_602)
+                if peer.recieveTextPacket() == G.C_102:
+                    peer.sendTextPacket(pickle.dumps(self.addr_book))
+                if peer.recieveTextPacket() != G.C_102:
+                    peer.sendTextPacket(pickle.dumps(self.addr_book))
+                    
                 
                 
                     

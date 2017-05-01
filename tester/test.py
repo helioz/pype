@@ -1,4 +1,4 @@
-#import lib.AVLib.AVWrapper
+import lib.AVLib.AVWrapper
 import lib.NetworkLib.NetworkWrapper
 from lib.CryptoLib.CryptoWrapper import CryptoHandler
 
@@ -31,10 +31,11 @@ def testCrypto():
         
 
 def testNetwork():
+    
     return True
     
 def run_diag():
-    testCrypto()
+    #testCrypto()
     testNetwork()
 
 #run_diag()

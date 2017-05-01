@@ -1,6 +1,8 @@
 name = "Pype"
 version_no = "0.0.1"
 
+MAX_Peers = 10
+
 IPADDR_support_server = "127.0.0.1"
 PORT_support_server = 80
 
@@ -13,6 +15,11 @@ contacts_file = "Resources/contacts.binary"
 
 key_size = 1024
 
+##Network globals
+packet_maxsize = 4096
+punchTimeout = 2
+nOfIteration = 5
+waiting_time = 2
 
 #Network Codes
 
