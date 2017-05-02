@@ -20,8 +20,14 @@ class Peer:
         #self.symKey = sym_key
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	self.s.bind(('',G.PORT_local))
-	
+
+	for p in range(G.nOfIteration):
+            try:
+	        self.s.bind(('',G.PORT_local))
+                break
+            except:
+                G.PORT_local = G.PORT_local + 10
+        print G.PORT_local
 	self.s.connect(netAlgo.stringToTuple(self.net_addr))
 	self.isPunched = False
 	self.s.settimeout(None)
@@ -32,24 +38,25 @@ class Peer:
         for i in range(G.nOfIteration) :
 	    if self.sendTextPacket('punch'):
 	        self.s.settimeout(G.punchTimeout)
-	        data = ''
+	        #data = ''
 	        try :
-		    data = self.s.recieveTextPacket(G.packet_maxsize)
+		    data = self.s.recv(G.packet_maxsize)
+                    
 	        except :
-                    time.sleep(G.waiting_time)
+                    time.sleep(3)
 		    continue
 	        if data == 'punch' :
 		    print 'received punch\n'
 		    self.sendTextPacket('punched')
 		    self.isPunched = True
-		    self.s.settimeout(None)
+		    #self.s.settimeout(None)
 		    return True
 	        if data == 'punched' :
 		    print 'received punched\n'
 		    self.isPunched = True
-		    self.s.settimeout(None)		
+		    #self.s.settimeout(None)		
 		    return True
-	    self.s.settimeout(None)
+	    #self.s.settimeout(None)
 	return False
 
     def sendMediaPacket(self, data_bStream):
@@ -61,6 +68,7 @@ class Peer:
         return data_bStream
 
     def sendTextPacket(self, data_bStream):
+        self.s.settimeout(None)
         try:
 	    self.s.send(data_bStream)
             return True
@@ -73,7 +81,7 @@ class Peer:
 	try:
 	    data_bStream = self.s.recv(G.packet_maxsize)
 	    if data_bStream != 'punched' and data_bStream != 'punch' and data_bStream != None :
-                self.s.settimeout(None)
+                #self.s.settimeout(None)
 		return data_bStream
 	    elif data_bStream == 'punch' :
 		self.send('punched')
@@ -106,7 +114,13 @@ class SupportServer:
         self.ip_addr = G.IPADDR_support_server
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	self.s.bind(('',G.PORT_local))
+        for p in range(G.nOfIteration):
+            try:
+	        self.s.bind(('',G.PORT_local))
+                break
+            except:
+                G.PORT_local = G.PORT_local + 10
+        print G.PORT_local
 	self.s.connect((self.ip_addr, G.PORT_support_server))
 
 

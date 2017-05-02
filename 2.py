@@ -5,23 +5,19 @@ import lib.CryptoLib.CryptoWrapper as crypto
 from lib.NetworkLib.p2p import Peer
 import Resources._globals as G
 import time
-import sys
 cryptoObj = crypto.CryptoHandler()
 netHandler = net.NetworkHandler(cryptoObj)
 
 #netHandler.getFirstPeer()
-G.PORT_local = 7005
+G.PORT_local = 7006
 print G.PORT_local
-peer = Peer("127.0.0.1:7006", netHandler.supportServer)
+peer = Peer("127.0.0.1:7005", netHandler.supportServer)
 #netHandler.connect2peer(peer)
 #netHandler.getPeerList(peer)
 
+for i in range(5):
+   peer.makeConnection()
 
-if peer.makeConnection():
-    print "Connection made"
-else:
-    print "Connection failed"
-    
 # for i in range(5):
-#     print peer.sendTextPacket("Hello from the other peer")
-
+#    print peer.recieveTextPacket()
+#    print "Recieve",i
