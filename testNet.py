@@ -12,6 +12,7 @@ netHandler = net.NetworkHandler(cryptoObj)
 peer = Peer("192.168.1.102:"+str(G.PORT_local), netHandler.supportServer)
 #netHandler.connect2peer(peer)
 #netHandler.getPeerList(peer)
-time.sleep(3)
-peer.sendTextPacket("Hello")
-#netHandler.ThreadListener(peer)
+
+for i in range(20):
+    print peer.recieveTextPacket()
+

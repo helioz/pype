@@ -6,7 +6,7 @@ MAX_Peers = 10
 IPADDR_support_server = "127.0.0.1"
 PORT_support_server = 80
 
-PORT_local = 3755
+PORT_local = 6369
 NET_ADDR_self = "127.0.0.1:3457"
 
 

@@ -30,26 +30,26 @@ class Peer:
     def makeConnection(self):
         ##Hole punches a connection to peer and returns true
         for i in range(G.nOfIteration) :
-	    self.sendTextPacket('punch')
-	    self.s.settimeout(G.punchTimeout)
-	    data = ''
-	    try :
-		data = self.s.recieveTextPacket(G.packet_maxsize)
-	    except :
-                time.sleep(G.waiting_time)
-		continue
-	    if data == 'punch' :
-		print 'received punch\n'
-		self.sendTextPacket('punched')
-		self.isPunched = True
-		self.s.settimeout(None)
-		return True
-	    if data == 'punched' :
-		print 'received punched\n'
-		self.isPunched = True
-		self.s.settimeout(None)		
-		return True
-	self.s.settimeout(None)
+	    if self.sendTextPacket('punch'):
+	        self.s.settimeout(G.punchTimeout)
+	        data = ''
+	        try :
+		    data = self.s.recieveTextPacket(G.packet_maxsize)
+	        except :
+                    time.sleep(G.waiting_time)
+		    continue
+	        if data == 'punch' :
+		    print 'received punch\n'
+		    self.sendTextPacket('punched')
+		    self.isPunched = True
+		    self.s.settimeout(None)
+		    return True
+	        if data == 'punched' :
+		    print 'received punched\n'
+		    self.isPunched = True
+		    self.s.settimeout(None)		
+		    return True
+	    self.s.settimeout(None)
 	return False
 
     def sendMediaPacket(self, data_bStream):
@@ -65,17 +65,17 @@ class Peer:
 	    self.s.send(data_bStream)
             return True
 	except socket.error, msg:
-	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]            
+	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]       
             return False
     
     def recieveTextPacket(self):
         self.s.settimeout(G.punchTimeout)
 	try:
 	    data_bStream = self.s.recv(G.packet_maxsize)
-	    if data_bStream != 'punched' and msg != 'punch' and msg != None :
+	    if data_bStream != 'punched' and data_bStream != 'punch' and data_bStream != None :
                 self.s.settimeout(None)
 		return data_bStream
-	    elif msg == 'punch' :
+	    elif data_bStream == 'punch' :
 		self.send('punched')
 		return self.recieveTextPacket()
 	    else :
