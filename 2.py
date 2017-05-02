@@ -9,7 +9,7 @@ cryptoObj = crypto.CryptoHandler()
 netHandler = net.NetworkHandler(cryptoObj)
 
 #netHandler.getFirstPeer()
-G.PORT_local = 7006
+#G.PORT_local = 7006
 print G.PORT_local
 peer = Peer("192.168.1.102:6369", netHandler.supportServer)
 #netHandler.connect2peer(peer)

@@ -65,13 +65,19 @@ class NetworkHandler:
     def getPeerList(self, peer):
         ##Returns a peer_list from selected peer.
         peer.sendTextPacket(G.C_501)
+        print "Sent 501"
         f = 0
         t = G.nOfIteration
         while f == 0 and t > 0:
+            
             if peer.recieveTextPacket() == G.C_502:
+                print "Recieved 502"
                 peer.sendTextPacket(G.C_102)
+                print "sent 102"
                 peer_list = pickle.loads(peer.recieveTextPacket())
+                print "Peer list obtained"
                 peer.sendTextPacket(G.C_102)
+                print "sent 102"
                 f = 1
                 return peer_list
             t = t -1 
@@ -143,7 +149,9 @@ class NetworkHandler:
     def ThreadListener(self, peer):
         while True:
             packet = peer.recieveTextPacket()
+            print "Recieved",packet
             if packet == G.C_501:
+                print "Recieved 501"
                 peer.sendTextPacket(G.C_102)
                 peer.sendTextPacket(pickle.dumps(self.peer_list))
                 while peer.recieveTextPacket() != G.C_102:
