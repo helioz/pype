@@ -69,11 +69,11 @@ class NetworkHandler:
         f = 0
         t = G.nOfIteration
         while f == 0 and t > 0:
-            
+            time.slpee(0.2)
             if peer.recieveTextPacket() == G.C_502:
                 print "Recieved 502"
-                peer.sendTextPacket(G.C_102)
-                print "sent 102"
+                #peer.sendTextPacket(G.C_102)
+                #print "sent 102"
                 peer_list = pickle.loads(peer.recieveTextPacket())
                 print "Peer list obtained"
                 peer.sendTextPacket(G.C_102)
@@ -152,7 +152,7 @@ class NetworkHandler:
             print "Recieved",packet
             if packet == G.C_501:
                 print "Recieved 501"
-                peer.sendTextPacket(G.C_102)
+                peer.sendTextPacket(G.C_502)
                 peer.sendTextPacket(pickle.dumps(self.peer_list))
                 while peer.recieveTextPacket() != G.C_102:
                     peer.sendTextPacket(pickle.dumps(self.peer_list))

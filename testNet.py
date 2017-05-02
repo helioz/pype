@@ -11,9 +11,9 @@ cryptoObj = crypto.CryptoHandler()
 n = net.NetworkHandler(cryptoObj)
 
 print G.PORT_local
-peer = Peer("192.168.1.106:6369", n.supportServer)
+peer = Peer("192.168.1.102:6370", n.supportServer)
 
 #peer.makeConnection()
-n.getPeerList(peer)
-#n.ThreadListener(peer)
+#n.getPeerList(peer)
+n.ThreadListener(peer)
 

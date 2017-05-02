@@ -40,8 +40,7 @@ class Peer:
 	        self.s.settimeout(G.punchTimeout)
 	        #data = ''
 	        try :
-		    data = self.s.recv(G.packet_maxsize)
-                    
+		    data = self.s.recv(G.packet_maxsize)                    
 	        except :
                     time.sleep(3)
 		    continue
