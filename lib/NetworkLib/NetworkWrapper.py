@@ -9,7 +9,7 @@ import pickle
 
 class NetworkHandler:
     def __init__(self, crypto):
-        self.peer_list = [] ##peer_list is a dictionary that contains net_addr and control flags of peers
+        self.peer_list = [] ##peer_list is a list that contains net_addr and control flags of peers
         self.network = p2p.P2PNetwork()
         self.supportServer = p2p.SupportServer()
         self.AddrBook = [("hash_address","encrypted_signature")]
@@ -69,7 +69,7 @@ class NetworkHandler:
         f = 0
         t = G.nOfIteration
         while f == 0 and t > 0:
-            time.slpee(0.2)
+            #time.slpee(0.2)
             if peer.recieveTextPacket() == G.C_502:
                 print "Recieved 502"
                 #peer.sendTextPacket(G.C_102)
@@ -107,16 +107,16 @@ class NetworkHandler:
     def callPeer(self, contact):
         ##Used to call a peer.
         ##Obtain peer address
-        pub_key_hash_other = crypto.sha256(str(contact.keyN) + str(contact.keyE))
+        pub_key_hash_other = crypto.pubKeyHash(str(contact.keyN) + str(contact.keyE))
         for ad in self.AddrBook:
             if ad[0] == pub_key_hash_other:
                 sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature 
         for p in self.network.nodeList:
-            if p.session_endpoints == net_addr:
+            if p.net_addr == sign.net_addr:
                 p.sendTextPacket(G.C_801)
                 if p.recieveTextPacket() == G.C_802:
-                    p.sendTextPacket(G.C_803+pub_key_hash_self)
-                    if p.recieveTextPacket() == G.C_803+pub_key_hash_other:
+                    p.sendTextPacket(G.C_803+"-"+pub_key_hash_self)
+                    if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
                         p.sendTextPacket(G.C_102)
                         while p.recieveTextPacket() != G.C_805:
                             pass
@@ -147,29 +147,57 @@ class NetworkHandler:
             self.pushAddrBookDelta(AddrBookDelta)
                               
     def ThreadListener(self, peer):
-        while True:
-            packet = peer.recieveTextPacket()
-            print "Recieved",packet
-            if packet == G.C_501:
-                print "Recieved 501"
-                peer.sendTextPacket(G.C_502)
-                peer.sendTextPacket(pickle.dumps(self.peer_list))
-                while peer.recieveTextPacket() != G.C_102:
+        try:
+            while True:
+                packet = peer.recieveTextPacket()
+                print "Recieved",packet
+                if packet == G.C_501:
+                    print "Recieved 501"
+                    peer.sendTextPacket(G.C_502)
                     peer.sendTextPacket(pickle.dumps(self.peer_list))
-            elif packet == G.C_701:
-                peer.sendTextPacket(G.C_702)
-                AddrBookDelta = pickle.loads(peer.recieveTextPacket())
-                addToAddrBook(AddrBookDelta)
-                print "Address Book delta updated"
-                
-            elif packet == G.C_601:
-                peer.sendTextPacket(G.C_602)
-                if peer.recieveTextPacket() == G.C_102:
-                    peer.sendTextPacket(pickle.dumps(self.addr_book))
-                if peer.recieveTextPacket() != G.C_102:
-                    peer.sendTextPacket(pickle.dumps(self.addr_book))
+                    while peer.recieveTextPacket() != G.C_102:
+                        peer.sendTextPacket(pickle.dumps(self.peer_list))
+                elif packet == G.C_701:
+                    peer.sendTextPacket(G.C_702)
+                    AddrBookDelta = pickle.loads(peer.recieveTextPacket())
+                    addToAddrBook(AddrBookDelta)
+                    print "Address Book delta updated"
                     
-                
+                elif packet == G.C_601:
+                    peer.sendTextPacket(G.C_602)
+                    if peer.recieveTextPacket() == G.C_102:
+                        peer.sendTextPacket(pickle.dumps(self.addr_book))
+                    if peer.recieveTextPacket() != G.C_102:
+                        peer.sendTextPacket(pickle.dumps(self.addr_book))
+
+                elif packet == G.C_801:
+                    #Incoming call
+                    f = 0
+                    print "Incoming call, recieved 801"
+                    peer.sendTextPacket(G.C_802)
+                    print "sent 802"
+                    addr = peer.recieveTextPacket()
+                    ad1, pub_key_hash_other = addr.split("-")
+                    if ad1 == G.C_803:
+                        print "Recieved 803"
+                        for contact in contacts:
+                            if contact.h == pub_key_hash_other:
+                                print "Caller identified"
+                                peer.sendTextPacket(G.C_803+"-"+crypto.pubKeyHashSelf())
+                                print "Address verification sent 803"
+                                peer.recieveTextPacket()
+                                print "Recieved 102"
+                                peer.sendTextPacket(G.C_805)
+                                print "sent 805"
+                                #Call incoming call interrupt with contact, and peer
+                                f = 1
+                        if f == 0:
+                            print "Caller not identified"
+                    
+        except KeyboardInterrupt:
+            print "Keyboard interrupted"
+            return
+            
                 
                     
 

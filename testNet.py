@@ -16,4 +16,4 @@ peer = Peer("192.168.1.102:6370", n.supportServer)
 #peer.makeConnection()
 #n.getPeerList(peer)
 n.ThreadListener(peer)
-
+n.callPeer()

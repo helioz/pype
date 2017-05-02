@@ -90,6 +90,11 @@ class CryptoHandler:
     def toPubKey(self, keyE, keyN):
         pub_key = rsaKey.PublicKey(keyN, keyE)
         return pub_key
+    def pubKeyHash(self, keyN, keyE):
+        return self.sha256(str(keyN)+str(keyE))
+    def pubKeyHashSelf(self):
+        return self.pubKeyHash(self.public_key().n, self.public_key().e)
+        
         
 
 if __name__ == '__main__':

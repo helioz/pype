@@ -8,15 +8,16 @@ import pickle
 
 ## struct net_addr (ip_addr, port)
 
-class AddrBook:
-    ## struct AddrBook{ String hash_addr; String signature}
-    def __init__(self):
-        pass
+class Signature:
+    def __init__(self, net_addr, hash_addr, meta_data):
+        self.net_addr = net_addr
+        self.hash_addr = hash_addr
+        self.meta_data = meta_data
 
-class PeerList:
-    ## struct PeerList { struct Netaddr netaddr, String controlFlags}
-    def __init__(self):
-        pass
+
+#AddrBook = [("hash_address","encrypted_signature")]
+#AddrDeltaDict = ["hash"]
+#peer_list = [(Peer, control_flags), (Peer, control_flags)]
 
 
 class Contact:
@@ -24,11 +25,8 @@ class Contact:
         self.name = name
         self.keyN = keyN
         self.keyE = keyE
+        self.h = CryptoWrapper().pubKeyHash(keyN, keyE)
         
-        #self.hash_addr = crypto.generateHashAddr(keyE, keyN)
-##AddrBookDeltaDict {hashOfAddrDelta, AddrDelta}
-
-
 
 class Pype:
     def __init__(self):
