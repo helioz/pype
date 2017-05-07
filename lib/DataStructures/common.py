@@ -25,7 +25,7 @@ class Contact:
         self.name = name
         self.keyN = keyN
         self.keyE = keyE
-        self.h = CryptoWrapper().pubKeyHash(keyN, keyE)
+        self.h = CryptoHandler().pubKeyHash(keyN, keyE)
         
 
 class Pype:
@@ -36,20 +36,45 @@ class Pype:
     
 
 
-def saveContact(Contact):
-    contact_list = []
+def saveContact(contact):
     try:
         with open(GLOBALS.contacts_file,"rb") as f:
-            contact_list = pickle.load(f)
-            contact_list.append(Contact)
+            unpickler = pickle.Unpickler(f)
+            contact_list = unpickler.load()
+            if contact_list[0].name == "none":
+                contact_list.remove(contact_list[0])
+            contact_list.append(contact)
         with open(GLOBALS.contacts_file, "wb") as f: ##This is a potential error, fix ASAP. Initialise Pype must include an empty contact
             pickle.dump(contact_list, f)
             
     except IOError:
         with open(GLOBALS.contacts_file,"wb") as f:
-                  contact_list.append(Contact)
-                  pickle.dump(contact_list, f)
+            contact_list = [contact]
+            pickle.dump(contact_list, f)
 
                   
+def loadContacts():
+    #contact_list = []
+    try:
+        with open(GLOBALS.contacts_file, "rb") as f:
+            try:
+                unpickler = pickle.Unpickler(f)
+                contact_list = unpickler.load()
+                #contact_list = pickle.load(f)
+                #if contact_list[0].name == "none":
+                #    contact_list.remove(contact_list[0])
+                return contact_list
+            except EOFError:
+                print "No contacts found"
+                saveContact(Contact("none",0,0))
+                #contact_list = [Contact("None",0,0)]
+                return contact_list
+
+    except IOError:
+        print "Contacts file does not exist, creating new"
+        with open(GLOBALS.contacts_file,"wb") as f:
+            contact_list = [Contact("none",0,0)]
+            pickle.dump(contact_list, f)
+            return contact_list
 
 

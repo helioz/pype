@@ -35,7 +35,16 @@ class UI():
         self.AddContactButton.connect("clicked", self.AddContactToList)
         self.AddContactWindowLaunchButton = self.builder.get_object("AddContact")
         self.AddContactWindowLaunchButton.connect("clicked", self.LaunchWindow, self.AddContactScreen)
+        self.numOfContacts = 1
+        
         self.contactCBox = self.builder.get_object("contactsCBox")
+        self.contactStore = Gtk.ListStore(str)
+        self.contactCell = Gtk.CellRendererText()
+        self.contactCBox.pack_start(self.contactCell, 0)
+        self.contactCBox.add_attribute(self.contactCell, 'text', 0)
+        self.contactCBox.set_model(self.contactStore)
+        self.contactCBox.connect('changed', self.on_chaned)
+        self.fillContactCBox()
         
         self.dialogOK = self.builder.get_object("button2")
         self.dialogOK.connect("clicked",self.CloseErrorWindow)
@@ -43,10 +52,16 @@ class UI():
         self.genNewKeys.connect("clicked", self.GenNewKeys)
         #common.fillContactCBox(self.contactCBox, self.cell)
 
+
         self.loadKeyCB = self.builder.get_object("loadKeyCB")
-        self.key_store = Gtk.ListStore(str)
-        self.fillkeyCB()
+        self.loadKeyStore = Gtk.ListStore(str)
+        self.loadKeyCell = Gtk.CellRendererText()
+        self.loadKeyCB.pack_start(self.loadKeyCell, 0)
+        self.loadKeyCB.add_attribute(self.loadKeyCell, 'text', 0)
+        self.loadKeyCB.set_model(self.loadKeyStore)
         self.loadKeyCB.connect("changed", self.setKeyCBHandler)
+        self.fillkeyCB()
+
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
         
         #AddContactScreen.show_all()
@@ -55,10 +70,25 @@ class UI():
         self.HomeScreen.show_all()
         Gtk.main()
 
+    def fillContactCBox(self):
+        contacts = common.loadContacts()
+        
+        for contact in contacts:
+            if contact.name == "none":
+                continue
+            self.contactStore.insert(self.numOfContacts, [contact.name])
+            self.numOfContacts = self.numOfContacts + 1
+        self.contactCBox.set_active(0)
+        
+    def on_chaned(self, widget):
+        return
+
+        
     def GenNewKeys(self, button):
         if self.pype.crypto.generateNewKeys():
             self.ShowMessage("Pype","Key pair generated successfully")
-            self.loadKeyCB.insert(self.numKeys, str(self.numKeys), "Key Pair "+str(self.numKeys))
+            self.numKeys = self.numKeys + 1
+            self.loadKeyStore.append(["Key Pair "+str(self.numKeys)])
             #self.loadKeyCB.destroy()
             #self.HomeScreen.hide()
             #self.HomeScreen.show_all()
@@ -71,12 +101,13 @@ class UI():
         for key in self.pype.crypto.key_ring:
             #self.key_store.append(["key pair "+str(i)])
             self.numKeys = self.numKeys + 1
-            self.loadKeyCB.insert(self.numKeys,str(self.numKeys), "Key Pair "+str(self.numKeys))
-            
-        self.loadKeyCB.set_entry_text_column(1)
+            self.loadKeyStore.insert(self.numKeys - 1,["Key Pair "+str(self.numKeys)])
+        self.loadKeyCB.set_active(0)
+        #self.loadKeyCB.set_entry_text_column(1)
 
     def setKeyCBHandler(self, box):
-        keyIndex = int(self.loadKeyCB.get_active_text()) - 1
+        #print self.loadKeyCB.get_active()
+        keyIndex = int(self.loadKeyCB.get_active())
         self.pype.crypto.setCurKey(keyIndex)
             
     def CloseErrorWindow(self, button):
@@ -85,6 +116,8 @@ class UI():
     def AddContactToList(self, button):
         c = common.Contact(self.nameEntry.get_text(), self.pubKeyeEntry.get_text(), self.pubKeynEntry.get_text() )
         self.AddContactScreen.hide()
+        self.contactStore.append([c.name])
+        self.numOfContacts = self.numOfContacts + 1
         self.ShowMessage("Success","Contact successfully added")
         common.saveContact(c)
         

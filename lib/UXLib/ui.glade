@@ -297,7 +297,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="loadKeyCB">
+              <object class="GtkComboBox" id="loadKeyCB">
                 <property name="width_request">200</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -349,7 +349,7 @@
                 <property name="margin_bottom">40</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkComboBoxText" id="contactsCBox">
+                  <object class="GtkComboBox" id="contactsCBox">
                     <property name="width_request">195</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>

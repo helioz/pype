@@ -30,7 +30,7 @@ class NetworkHandler:
                 self.supportServer.sendTextPacket(G.C_102)
                 addr = addr[8:]
                 
-                peer = p2p.Peer(addr, 0)
+                peer = p2p.Peer(addr, self.supportServer)
 
                 if self.connect2peer(peer):
                     f = 1
@@ -107,25 +107,25 @@ class NetworkHandler:
     def callPeer(self, contact):
         ##Used to call a peer.
         ##Obtain peer address
-        pub_key_hash_other = crypto.pubKeyHash(str(contact.keyN) + str(contact.keyE))
+        pub_key_hash_other = crypto.pubKeyHash(contact.keyN, contact.keyE)
         for ad in self.AddrBook:
             if ad[0] == pub_key_hash_other:
-                sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature 
-        for p in self.network.nodeList:
-            if p.net_addr == sign.net_addr:
-                p.sendTextPacket(G.C_801)
-                if p.recieveTextPacket() == G.C_802:
-                    p.sendTextPacket(G.C_803+"-"+pub_key_hash_self)
-                    if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
-                        p.sendTextPacket(G.C_102)
-                        while p.recieveTextPacket() != G.C_805:
-                            pass
-                        return peer
-                    else:
-                        print "Reciever unidentified"
+                sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature
+        p = self.network.getPeerByAddr(sign.net_addr)
+        if p != None:
+            p.sendTextPacket(G.C_801)
+            if p.recieveTextPacket() == G.C_802:
+                p.sendTextPacket(G.C_803+"-"+pub_key_hash_self)
+                if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
+                    p.sendTextPacket(G.C_102)
+                    while p.recieveTextPacket() != G.C_805:
+                        pass
+                    return peer
                 else:
-                    print "Call rejected"
-
+                    print "Reciever unidentified"
+            else:
+                print "Call rejected"
+                    
         print "Address not a peer. Trying to establish connection"
         peer = p2p.Peer(net_addr,0)
         
@@ -146,7 +146,7 @@ class NetworkHandler:
             self.AddrDeltaDict.append(h)
             self.pushAddrBookDelta(AddrBookDelta)
                               
-    def ThreadListener(self, peer):
+    def PeerListenerThread(self, peer):
         try:
             while True:
                 packet = peer.recieveTextPacket()
@@ -197,9 +197,15 @@ class NetworkHandler:
         except KeyboardInterrupt:
             print "Keyboard interrupted"
             return
-            
-                
-                    
+
+        
+    def ServerListenerThread(self):
+        try:
+            while True:
+                self.supportServer.sendTextPacket(G.C_ )
+        except KeyboardInterrupt:
+            print "Keyboard interrupt, exit thread"
+            return
 
     
     

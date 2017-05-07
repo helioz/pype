@@ -1,3 +1,5 @@
+import random
+
 name = "Pype"
 version_no = "0.0.1"
 
@@ -6,7 +8,7 @@ MAX_Peers = 10
 IPADDR_support_server = "127.0.0.1"
 PORT_support_server = 80
 
-PORT_local = 6370
+PORT_local = random.choice([6500,6600, 6661, 6662])
 NET_ADDR_self = "127.0.0.1:3457"
 
 

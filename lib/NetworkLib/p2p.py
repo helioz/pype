@@ -26,8 +26,8 @@ class Peer:
 	        self.s.bind(('',G.PORT_local))
                 break
             except:
-                G.PORT_local = G.PORT_local + 10
-        print G.PORT_local
+                print "Failed to bind port, retrying"
+
 	self.s.connect(netAlgo.stringToTuple(self.net_addr))
 	self.isPunched = False
 	self.s.settimeout(None)
@@ -98,6 +98,13 @@ class P2PNetwork:
 
     def addNode(self, peer):
         self.nodeList.append(peer)
+        
+    def getPeerByAddr(self, net_addr):
+        for p in self.nodeList:
+            if p.net_addr == net_addr:
+                return peer
+        print "No peer with corresponding address"
+        return None
 
     def pushBroadcast(self, data_bStream, ctrlString1, ctrlString2):
         for p in self.nodeList:
@@ -107,6 +114,8 @@ class P2PNetwork:
                 p.sendTCP(data_bStream)
                 print "Successfully sent to ", p.session_endpoints
             p.destroyTCP()
+
+
 
 class SupportServer:
     def __init__(self, ):
@@ -118,9 +127,10 @@ class SupportServer:
 	        self.s.bind(('',G.PORT_local))
                 break
             except:
-                G.PORT_local = G.PORT_local + 10
-        print G.PORT_local
-	self.s.connect((self.ip_addr, G.PORT_support_server))
+                print "Error binding, retrying..."
+                #G.PORT_local = G.PORT_local + 10
+        print G.name+" "+G.version_no+" running on port :",G.PORT_local
+        self.s.connect((self.ip_addr, G.PORT_support_server))
 
 
     def sendTextPacket(self, packet):
