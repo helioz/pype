@@ -8,6 +8,10 @@ import lib.NetworkLib.p2p as p2p
 
 import pickle
 import threading
+import random
+import time
+
+noCallGlobal = True
 
 class PeerListener(threading.Thread):
     def __init__(self, threadID, peer, listenerFunc):
@@ -43,11 +47,66 @@ class Contact:
 
 class Pype:
     def __init__(self):
+        global noCallGlobal
         #Initialising bottom layers
         self.crypto = CryptoHandler()
+        ##Loads keyring from file
+        ##Sets current key to 0
+        
         self.network = NetworkHandler(self.crypto)
+        ##Finds current net address
         self.multi = AVHandler()
 
+        self.peerThreads = []
+        
+        while not self.network.getFirstPeer():
+            print "Failed to get first peer. Retrying...."
+            time.sleep(1)
+        #Get first peer from server
+
+        #Get address book
+        self.network.getAddrBook(self.network.peer_list[0][0])
+        #Update address book with self address
+        AddrBookDelta = [(self.crypto.pubKeyHashSelf(), self.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.crypto.pubKeyHashSelf(), 0)))]
+        #Populate peer_list
+        for p in self.network.peer_list:
+            peer_list = self.network.getPeerList(p[0])
+            for peer in peer_list:
+                if random.choice([1,2,3]) == 3:
+                    self.network.connect2peer(peer[0])
+
+        network.addToAddrBook(AddrBookDelta)
+        
+        #Listening to all peers as threads
+        self.thread_count = 0
+        for peer in self.network.peer_list:
+            self.peerThreads.append(PeerListener(thread_count, peer[0], self.network.PeerListenerThread))
+            self.peerThreads[thread_count].start()
+            self.thread_count = self.thread_count + 1
+            
+
+        try:
+            while True:
+                while noCallGlobal:
+                    #listenToServer
+                    pass
+
+        except KeyboardInterrupt:
+            print "Fin"
+            
+            
+                
+                
+            
+
+        
+
+
+        
+
+        
+        
+        
         
 
 

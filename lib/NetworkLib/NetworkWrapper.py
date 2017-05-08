@@ -53,6 +53,8 @@ class NetworkHandler:
     def connect2peer(self, peer):
         t = G.nOfIteration
         f = 0
+        if (peer, 0) in self.peer_list:
+            return True
         while (not f) and t>0:
             if peer.makeConnection():
                 f = 1
@@ -87,7 +89,7 @@ class NetworkHandler:
                 f = 1
                 return peer_list
             t = t -1 
-        return False
+        return None
 
     def getAddrBook(self, peer):
         ##Adds AddrBook of selected peer as current AddrBook
@@ -101,7 +103,7 @@ class NetworkHandler:
                 peer.sendTextPacket(G.C_102)
                 f = 1
                 self.AddrBook = addr_book
-                return
+                return None
             t = t -1 
         return
 
@@ -139,7 +141,7 @@ class NetworkHandler:
             return self.callPeer(net_addr, pub_key_hash_self,pub_key_hash_other)
         else:
             print "Peer does not exist"
-            return
+            return None
 
     def addToAddrBook(self, AddrBookDelta):
         f = 0
@@ -204,14 +206,7 @@ class NetworkHandler:
             print "Keyboard interrupted"
             return
 
-        
-    def ServerListenerThread(self):
-        try:
-            while True:
-                self.supportServer.sendTextPacket(G.C_ )
-        except KeyboardInterrupt:
-            print "Keyboard interrupt, exit thread"
-            return
+
 
     
     

@@ -16,11 +16,13 @@ Key_Size = GLOBALS.key_size
 class CryptoHandler:
     def __init__(self):
         self.key_ring = []
+
         try:
             with open (GLOBALS.key_ring_binary, 'rb') as fp:
                 self.key_ring = pickle.load(fp)
         except IOError:
             self.generateNewKeys()
+
         self.setCurKey(0)
 
 
@@ -38,6 +40,8 @@ class CryptoHandler:
             print "IOError"
             return False
         return True
+
+
     def setCurKey(self, keyIndex):
         self.cur_key = self.key_ring[keyIndex]
         
@@ -53,6 +57,7 @@ class CryptoHandler:
         #Fix signatureP to be a bytestring
         signatureC = RSA.encryptSignature(pickle.dumps(signatureP),self.cur_key[1])
         return b64.b64encode(signatureC)
+    
     
     def decryptSignature(self, signatureC, public_key):
         ##Decrypts signatureC cyphertext string using d_key

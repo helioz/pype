@@ -1,3 +1,4 @@
+sign = lib.DataStructures.common.Signature(net_addr, hash_addr, meta_data)
 peer = p2p.Peer(net_addr, supportServer)
 peer.net_addr
 peer.isPunched
@@ -38,4 +39,21 @@ crypto.private_key() #Returns current private key
 crypto.pubKeyHash(keyE, keyN) #Returns hash address corresponding to given key
 crypto.pubKeyHashSelf() #Returns hash address corresponding to current key
 crypto.toPubKey(keyE, keyN) #Returns a public key object
+crypto.setCurKey(keyIndex) #Sets current key to 0
 
+netHand = lib.NetworkLib.NetworkWrapper.NetworkHandler(CryptoHandler())
+netHand.peer_list
+netHand.network
+netHand.supportServer
+netHand.AddrBook
+netHand.AddrDeltaDict
+
+netHand.findNetAddr()
+netHand.getFirstPeer() #Find first peer from ss and adds it to peer_list, network and connects to peer, returns True or False
+netHand.connect2peer(peer) #Connects to peer and adds it to peer list and network returns true or False
+netHand.getPeerList(peer) #Returns peer_list from peer or None
+netHand.getAddrBook(peer) #Updates current AddrBook with that of peer
+netHand.pushAddrBookDelta(AddrBookDelta) #Pushes AddrBookDelta to all peers
+netHand.callPeer(contact) #Returns peer ready to call or None
+netHand.addToAddrBook(AddrBookDelta) #Updates current address book and pushes delta to all peers, verifies hash.
+netHand.PeerListenerThread(peer) #Listens to peer and responds as required.
