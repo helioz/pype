@@ -3,16 +3,29 @@
 import Resources._globals as GLOBALS
 from lib.CryptoLib.CryptoWrapper import CryptoHandler
 from lib.NetworkLib.NetworkWrapper import NetworkHandler
+from lib.AVLib.AVWrapper import AVHandler
+import lib.NetworkLib.p2p as p2p
 
 import pickle
+import threading
 
+class PeerListener(threading.Thread):
+    def __init__(self, threadID, peer, listenerFunc):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.peer = peer
+        self.listenerFunc = listenerFunc
+    def run(self):
+        print "Listener running for peer :",self.peer.net_addr
+        self.listenerFunc(self.peer)
+        print "Closing connection to peer :",self.peer.net_addr
 ## struct net_addr (ip_addr, port)
 
 class Signature:
     def __init__(self, net_addr, hash_addr, meta_data):
         self.net_addr = net_addr
-        self.hash_addr = hash_addr
-        self.meta_data = meta_data
+        #self.hash_addr = hash_addr
+        #self.meta_data = meta_data
 
 
 #AddrBook = [("hash_address","encrypted_signature")]
@@ -30,8 +43,19 @@ class Contact:
 
 class Pype:
     def __init__(self):
+        #Initialising bottom layers
         self.crypto = CryptoHandler()
         self.network = NetworkHandler(self.crypto)
+        self.multi = AVHandler()
+
+        
+
+
+
+        
+        
+        
+        
     
     
 

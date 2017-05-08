@@ -70,7 +70,7 @@ class CryptoHandler:
         cleartext = RSA.decrypt(b64.b64decode(ciphertext), self.private_key())
         return cleartext
     
-    def encryptAVString(self, AV_encode_string_d,e_key):
+    def encryptString(self, AV_encode_string_d,e_key):
         ##Returns a ciphertext of encrypted AV_encode_string
 
         #Add security according to network lib security.
@@ -78,7 +78,7 @@ class CryptoHandler:
         return AV_encode_string_d
 
     
-    def decryptAVString(self,AV_encode_string_e, d_key):
+    def decryptString(self,AV_encode_string_e, d_key):
         ##Returns a plaintext of decrypted AV_encode_string
 
         #Add encryption according to network library security
@@ -91,7 +91,7 @@ class CryptoHandler:
         pub_key = rsaKey.PublicKey(keyN, keyE)
         return pub_key
     def pubKeyHash(self, keyN, keyE):
-        return self.sha256(str(keyN)+str(keyE))
+        return self.sha256(str(keyN)+str(keyE))  #Returns hash address
     def pubKeyHashSelf(self):
         return self.pubKeyHash(self.public_key().n, self.public_key().e)
         

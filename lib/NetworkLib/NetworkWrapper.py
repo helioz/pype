@@ -12,10 +12,16 @@ class NetworkHandler:
         self.peer_list = [] ##peer_list is a list that contains net_addr and control flags of peers
         self.network = p2p.P2PNetwork()
         self.supportServer = p2p.SupportServer()
+        self.peerListenerThreads = []
         self.AddrBook = [("hash_address","encrypted_signature")]
         self.crypto = crypto
         self.AddrDeltaDict = ["hash"]
-
+        self.findNetAddrSelf()
+        
+        
+    def findNetAddrSelf(self):
+        G.NET_ADDR_self = "127.0.0.1:14796" ##Fill function
+        
     def getFirstPeer(self):
         ##Returns the net_addr of first peer returned by support server
         f = 0
@@ -137,7 +143,7 @@ class NetworkHandler:
 
     def addToAddrBook(self, AddrBookDelta):
         f = 0
-        h = crypto.sha256(pickle.dumps(AddrBookDelta))
+        h = self.crypto.sha256(pickle.dumps(AddrBookDelta))
         for t in self.AddrDeltaDict:
             if t[0] == h:
                 f = 1

@@ -109,7 +109,7 @@ class P2PNetwork:
     def pushBroadcast(self, data_bStream, ctrlString1, ctrlString2):
         for p in self.nodeList:
             p.createTCPStream()
-            p.sendTCP(ctrlString)
+            p.sendTCP(ctrlString1)
             if p.recieveTCP() == ctrlString2:
                 p.sendTCP(data_bStream)
                 print "Successfully sent to ", p.session_endpoints
@@ -137,9 +137,10 @@ class SupportServer:
         ##Send UDP packet to server
         try:
 	    self.s.send(packet)
+            return True
 	except socket.error, msg:
 	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-	    return None
+	    return False
 
     def recieveTextPacket(self):
         ##Recieve UDP packet from server
