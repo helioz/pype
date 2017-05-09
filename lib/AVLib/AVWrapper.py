@@ -67,12 +67,12 @@ class AVHandler:
         return
 
     def video_read(self):
-        p = pyaudio.PyAudio()
-        stream = p.open(format=p.get_format_from_width(self.WIDTH),
-                        channels=self.CHANNELS,
-                        rate=self.RATE,
-                        output=True,
-                        frames_per_buffer=self.CHUNK)
+        #p = pyaudio.PyAudio()
+        #stream = p.open(format=p.get_format_from_width(self.WIDTH),
+        #                channels=self.CHANNELS,
+        #                rate=self.RATE,
+        #                output=True,
+        #                frames_per_buffer=self.CHUNK)
         
         while True:
             avdata = self.peer.recieveMediaPacket()
@@ -83,9 +83,9 @@ class AVHandler:
                 cv2.imshow('frame',decimg)
                 if cv2.waitKey(1) & 0xFF == ord ('q'):
                     break
-            if avdata[0] == "A":
-                adata  = avdata[1:]
-                stream.write(adata)
+         #   if avdata[0] == "A":
+         #       adata  = avdata[1:]
+         #       stream.write(adata)
             if avdata[0] == "E":
                 self.callEnd = True
                 break
@@ -95,11 +95,11 @@ class AVHandler:
         self.callEnd = False
         try:
             threading.Thread(target = self.video_send).start()
-            threading.Thread(target = self.audio_send).start()
+            #threading.Thread(target = self.audio_send).start()
             threading.Thread(target = self.video_read).start()
         except:
             print ("AVHandler.callAV() failed")
             threading.Thread(target = self.video_send).join()
-            threading.Thread(target = self.audio_send).join()
+            #threading.Thread(target = self.audio_send).join()
             threading.Thread(target = self.video_read).join()
 
