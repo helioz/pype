@@ -110,7 +110,7 @@ class Pype:
                 continue
             for peer in peer_list:
                 #if random.choice([1,2,3]) == 3:
-                if peer[0].net_addr != GLOBALS.NET_ADDR_self:
+                if peer[0].net_addr != GLOBALS.NET_ADDR_self and peer not in self.network.peer_list:
                     self.network.connect2peer(peer[0])
                     
         #Launching peer threads

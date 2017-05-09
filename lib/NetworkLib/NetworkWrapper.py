@@ -90,10 +90,14 @@ class NetworkHandler:
                 #print "sent 102"
                 pickledPeerList = peer.recieveTextPacket()
                 if pickledPeerList != None:
+                    #print pickledPeerList
                     peer_list_u = pickle.loads(pickledPeerList)
+                    print "getPeerList: Obtained peer_addr :",peer_list_u
                     peer_list = []
                     for adr in peer_list_u:
-                        peer_list.append( (p2p.Peer(adr,self.supportServer), 0) )
+                        newPeer = (p2p.Peer(adr,self.supportServer), 0)
+                        if newPeer not in peer_list:
+                            peer_list.append( newPeer )
                     print "getPeerList: Peer list obtained"
                     peer.sendTextPacket(G.C_102)
                     print "getPeerList: sent 102"
@@ -182,11 +186,12 @@ class NetworkHandler:
                 if packet == G.C_501:
                     print "PeerListener: Recieved 501"
                     peer.sendTextPacket(G.C_502)
-                    print "PeerListener: Peer list to send", self.peer_list
+                    #print "PeerListener: Peer list to send", self.peer_list
                     pl = []
                     for it in self.peer_list:
                         pl.append(it[0].net_addr)
-                    peer.sendTextPacket(pickle.dumps(pl)
+                    print "PeerListener: Peer list to send", pl
+                    peer.sendTextPacket(pickle.dumps(pl))
 
                 elif packet == G.C_701:
                     peer.sendTextPacket(G.C_702)

@@ -35,6 +35,12 @@ class Peer:
         self.s.settimeout(G.punchTimeout)
         self.supportServer = supportServer
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.net_addr == other.net_addr
+        else:
+            return False
+
     def makeConnection(self):
         ##Hole punches a connection to peer and returns true
         self.supportServer.getcon(self.net_addr)
