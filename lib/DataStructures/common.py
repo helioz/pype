@@ -86,10 +86,10 @@ class Pype:
                 self.network.peer_list.append((firstPeer,0))
                 self.network.network.nodeList.append(firstPeer)
                 print "First peer connected"
-                self.peerThreads.append(PeerListener(thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
-                self.peerThreads[thread_count].start()
+                self.peerThreads.append(PeerListener(self.thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
+                self.peerThreads[self.thread_count].start()
                 self.thread_count = self.thread_count + 1
-                print "First peer thread started"
+                print "First peer thread started. Success"
                 break
             
             
@@ -127,8 +127,8 @@ class Pype:
         #Listening to all peers as threads
 
         for peer in self.network.peer_list:
-            self.peerThreads.append(PeerListener(thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
-            self.peerThreads[thread_count].start()
+            self.peerThreads.append(PeerListener(self.thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
+            self.peerThreads[self.thread_count].start()
             self.thread_count = self.thread_count + 1
 
                         
