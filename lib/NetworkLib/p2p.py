@@ -5,10 +5,12 @@ import sys
 import time
 import lib.NetworkLib.network_support as netAlgo
 
+getaddrm = 'getaddr'
+getpeerm = 'getpeer'
 initm = 'init'
 pollm = 'poll'
 getconm = 'getcon'
-endm = 'e'
+endm = 'end'
 
 separator = '_'
 
@@ -26,7 +28,7 @@ class Peer:
 	        self.s.bind(('',G.PORT_local))
                 break
             except:
-                print "Failed to bind port, retrying"
+                print "Peer init: Failed to bind port, retrying"
 
 	self.s.connect(netAlgo.stringToTuple(self.net_addr))
 	self.isPunched = False
@@ -35,14 +37,16 @@ class Peer:
 
     def makeConnection(self):
         ##Hole punches a connection to peer and returns true
+        self.supportServer.getcon(self.net_addr)
         for i in range(G.nOfIteration) :
+            print "makeConn(): Running make connection on ", self.net_addr
 	    if self.sendTextPacket('punch'):
 	        self.s.settimeout(G.punchTimeout)
 	        #data = ''
 	        try :
 		    data = self.s.recv(G.packet_maxsize)                    
 	        except :
-                    time.sleep(3)
+                    time.sleep(1)
 		    continue
 	        if data == 'punch' :
 		    print 'received punch\n'
@@ -57,6 +61,7 @@ class Peer:
 		    return True
 	    #self.s.settimeout(None)
 	return False
+    
 
     def sendMediaPacket(self, data_bStream):
 	    self.s.send(data_bStream)
@@ -70,8 +75,10 @@ class Peer:
         
         try:
 	    self.s.send(data_bStream)
+            print "sendTexPack sent ", data_bStream, "to", self.net_addr
             return True
 	except socket.error, msg:
+            print "sendTextPacket failed"
 	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]       
             return False
     
@@ -88,7 +95,7 @@ class Peer:
 	    else :
 		return self.recieveTextPacket()
 	except:
-	    print 'Error: No packet recieved from peer'
+	    print 'recieveTextPacket No packet recieved from peer'
 	    return
                   
     
@@ -103,7 +110,7 @@ class P2PNetwork:
         for p in self.nodeList:
             if p.net_addr == net_addr:
                 return peer
-        print "No peer with corresponding address"
+        print "getPeerByAddr: No peer with corresponding address"
         return None
 
     def pushBroadcast(self, data_bStream, ctrlString1, ctrlString2):
@@ -112,7 +119,7 @@ class P2PNetwork:
             p.sendTCP(ctrlString1)
             if p.recieveTCP() == ctrlString2:
                 p.sendTCP(data_bStream)
-                print "Successfully sent to ", p.session_endpoints
+                print "pushBroadcast: Successfully sent to ", p.session_endpoints
             p.destroyTCP()
 
 
@@ -128,7 +135,7 @@ class SupportServer:
 	        self.s.bind(('',G.PORT_local))
                 break
             except:
-                print "Error binding, retrying..."
+                print "supportServer: Error binding, retrying..."
                 #G.PORT_local = G.PORT_local + 10
         print G.name+" "+G.version_no+" running on port :",G.PORT_local
         self.s.connect((self.ip_addr, G.PORT_support_server))
@@ -136,30 +143,42 @@ class SupportServer:
 
     def getAddress(self):  #Returns net_addr of self
         while True:
-            self.sendTextPacket("somestring")
+            self.sendTextPacket(getaddrm)
             addr = self.recieveTextPacket()
             if addr != None:
                 return addr
 
     def getFirstPeer(self):
-        return addr
+        #while True:
+        self.sendTextPacket(getpeerm)
+        addr = self.recieveTextPacket()
+        if addr != None:
+            return addr
+        else:
+            return endm
+            
     
     def getcon(self, addr):
         msg = getconm + separator + addr
         self.s.send(msg)
-        print "getcon sent ", msg
+        print "getcon(): sent ", msg
         msg = self.s.recv(G.packet_maxsize)
         #if msg != endm :
         #    self.getcon(addr)
 
     def poll(self):
-        print "Called poll"
+        #print "Called poll"
         self.s.send(pollm)
-        print "poll sent", pollm
+        #print "poll sent", pollm
         msg = self.s.recv(G.packet_maxsize)
+        #print msg
+        if msg == endm:
+            return None
         duties = msg.split(separator)
-        if duties[-1] == endm :
+ 
+        if duties[-1] == endm:
             del duties[-1]
+        print duties
         return duties
         
     def sendTextPacket(self, packet):

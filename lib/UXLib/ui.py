@@ -69,6 +69,7 @@ class UI():
         #IncomingCallScreen.show_all()
         self.HomeScreen.show_all()
         Gtk.main()
+        #self.pype.runPype()
 
     def fillContactCBox(self):
         contacts = common.loadContacts()

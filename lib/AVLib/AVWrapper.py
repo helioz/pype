@@ -19,6 +19,7 @@ class AVHandler:
         self.CHANNELS = 1
         self.RATE = 20000
         self.WIDTH = 2
+        self.callEnd = False
         
 
         
@@ -27,7 +28,7 @@ class AVHandler:
         
     def video_send(self):
         self.cap = cv2.VideoCapture(0)
-        while(True):
+        while not self.callEnd:
             ret, vframe = cap.read()
             cv2.imshow('frame',vframe)
             time.sleep(G.frame_rate)
@@ -40,8 +41,10 @@ class AVHandler:
             #print sys.getsizeof(s)
             self.peer.sendMediaPacket("V"+s)
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                self.peer.sendMediaPacket("E")
                 break
-            cap.release()
+        
+        cap.release()
         return
 
     def audio_send(self):
@@ -52,7 +55,7 @@ class AVHandler:
                 output=True,
                 frames_per_buffer=self.CHUNK)
 
-        while True:
+        while not self.callEnd:
             print("*recording")
             adata  = stream.read(CHUNK)
             self.peer.sendMediaPacket("A"+adata)
@@ -83,13 +86,17 @@ class AVHandler:
             if avdata[0] == "A":
                 adata  = avdata[1:]
                 stream.write(adata)
+            if avdata[0] == "E":
+                self.callEnd = True
+                break
 
 
     def callAV(self):
+        self.callEnd = False
         try:
-            threading.Thread(target = video_send).start()
-            threading.Thread(target = audio_send).start()
-            threading.Thread(target = video_read).start()
+            threading.Thread(target = self.video_send).start()
+            threading.Thread(target = self.audio_send).start()
+            threading.Thread(target = self.video_read).start()
         except:
             print ("AVHandler.callAV() failed")
 

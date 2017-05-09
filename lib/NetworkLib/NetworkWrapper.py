@@ -4,6 +4,7 @@
 import p2p
 import Resources._globals as G
 import pickle
+import time
 
 
 
@@ -17,7 +18,8 @@ class NetworkHandler:
         self.crypto = crypto
         self.AddrDeltaDict = ["hash"]
         G.NET_ADDR_self = self.supportServer.getAddress()
-        print G.NET_ADDR_self
+        print "pype running at IP: ",G.NET_ADDR_self
+        self.numPeers = 0
 
 
         
@@ -34,21 +36,21 @@ class NetworkHandler:
         #     elif addr[:7] == G.C_102:
         #         self.supportServer.sendTextPacket(G.C_102)
         #         addr = addr[8:]
-        while True:
-            addr = self.supportServer.getFirstPeer()
-            if addr == 'end':
-                time.sleep(G.waiting_time)
-                continue
-            if addr == G.NET_ADDR_self:
-                time.sleep(G.waiting_time)
-                continue
+        #while True:
+        addr = self.supportServer.getFirstPeer()
+        if addr == 'end':
+            time.sleep(G.waiting_time)
+            return False
+        if addr == G.NET_ADDR_self:
+            time.sleep(G.waiting_time)
+            return False
             
-            peer = p2p.Peer(addr, self.supportServer)
-            print "First peer object made"
-            self.supportServer.getcon(peer.net_addr)
-            if self.connect2peer(peer):
-                print "Connected to peer"
-                return True
+        peer = p2p.Peer(addr, self.supportServer)
+        #print "First peer object made"
+        #self.supportServer.getcon(peer.net_addr)
+        if self.connect2peer(peer):
+            #print "Connected to peer"
+            return True
 
             
             
@@ -58,19 +60,19 @@ class NetworkHandler:
         f = 0
         if (peer, 0) in self.peer_list:
             return True
-        while (not f) and t>0:
+        #while (not f) and t>0:
             #self.supportServer.getcon(peer.net_addr)
-            if peer.makeConnection():
-                f = 1
-                break
-            t = t - 1
-        if f == 1:
-            self.peer_list.append((peer, 0))
-            self.network.addNode(peer)
-            return True
-        else:
-            print "Failed to connect to node"
-            return False
+            # if peer.makeConnection():
+        #         f = 1
+        #         break
+        #     t = t - 1
+        # if f == 1:
+        self.peer_list.append((peer, 0))
+        self.network.addNode(peer)
+        return True
+        # else:
+        #     print "Failed to connect to node"
+        #     return False
         ##Hole punches a connection to a peer, returns true or false
 
         
@@ -160,9 +162,17 @@ class NetworkHandler:
 
 
             
-    def PeerListenerThread(self, peer, mainInterrupt):
+    def PeerListenerThread(self, peer, callInterrupt):
+        f1 = False
+        for i in range(5):
+            if peer.makeConnection():
+                f1 = True
+                self.numPeers = self.numPeers + 1
+                break
+            time.sleep(3)
         try:
-            while True:
+            while True and f1:
+                #peer.makeConnection()
                 packet = peer.recieveTextPacket()
                 print "Recieved",packet
                 if packet == G.C_501:
@@ -203,14 +213,14 @@ class NetworkHandler:
                                 print "Recieved 102"
                                 peer.sendTextPacket(G.C_805)
                                 print "sent 805"
-                                mainInterrupt(1,peer)
+                                callInterrupt(1,peer)
                                 #Call incoming call interrupt with contact, and peer
                                 f = 1
                         if f == 0:
                             print "Caller not identified"
 
             
-                    
+                            
         except KeyboardInterrupt:
             print "Keyboard interrupted"
             return
