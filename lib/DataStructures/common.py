@@ -69,10 +69,7 @@ class Pype:
         ##Sets current key to 0
         self.network = NetworkHandler(self.crypto)
         ##Finds current net address
-        try:
-            self.runPype()
-        except KeyboardInterrupt:
-            self.notKillAll = True
+
         
     def runPype(self):
         self.peerThreads = []
@@ -118,6 +115,8 @@ class Pype:
         print "runPype: list population"
         for p in self.network.peer_list:
             peer_list = self.network.getPeerList(p[0])
+            if peer_list == None:
+                continue
             for peer in peer_list:
                 #if random.choice([1,2,3]) == 3:
                 if peer[0].net_addr != GLOBALS.NET_ADDR_self:

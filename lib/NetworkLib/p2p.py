@@ -39,7 +39,7 @@ class Peer:
         ##Hole punches a connection to peer and returns true
         self.supportServer.getcon(self.net_addr)
         for i in range(G.nOfIteration) :
-            print "makeConn(): Running make connection on ", self.net_addr
+            #print "makeConn(): Running make connection on ", self.net_addr
 	    if self.sendTextPacket('punch'):
 	        self.s.settimeout(G.punchTimeout)
 	        #data = ''
@@ -49,13 +49,13 @@ class Peer:
                     time.sleep(1)
 		    continue
 	        if data == 'punch' :
-		    print 'received punch\n'
+		    #print 'received punch\n'
 		    self.sendTextPacket('punched')
 		    self.isPunched = True
 		    #self.s.settimeout(None)
 		    return True
 	        if data == 'punched' :
-		    print 'received punched\n'
+		    #print 'received punched\n'
 		    self.isPunched = True
 		    #self.s.settimeout(None)		
 		    return True
@@ -75,10 +75,10 @@ class Peer:
         
         try:
 	    self.s.send(data_bStream)
-            print "sendTexPack sent ", data_bStream, "to", self.net_addr
+            #print "sendTexPack sent ", data_bStream, "to", self.net_addr
             return True
 	except socket.error, msg:
-            print "sendTextPacket failed"
+            print "sendTextPacket failed at peer"
 	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]       
             return False
     
@@ -95,7 +95,7 @@ class Peer:
 	    else :
 		return self.recieveTextPacket()
 	except:
-	    print 'recieveTextPacket No packet recieved from peer'
+	    #print 'recieveTextPacket No packet recieved from peer'
 	    return
                   
     
@@ -181,7 +181,7 @@ class SupportServer:
  
         if duties[-1] == endm:
             del duties[-1]
-        print duties
+        #print duties
         return duties
         
     def sendTextPacket(self, packet):
@@ -191,6 +191,7 @@ class SupportServer:
             return True
 	except socket.error, msg:
 	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+            print "sendTextPacket : error at supportServer"
 	    return False
 
     def recieveTextPacket(self):
@@ -199,7 +200,7 @@ class SupportServer:
 	     packet = self.s.recv(G.packet_maxsize)
 	     return packet
 	except socket.error:
-	    print 'Packet recieve error at supportServer'
+	    #print 'recieveTextPacket: Packet recieve error at supportServer'
             return None
 
 

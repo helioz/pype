@@ -79,22 +79,23 @@ class NetworkHandler:
     def getPeerList(self, peer):
         ##Returns a peer_list from selected peer.
         peer.sendTextPacket(G.C_501)
-        print "Sent 501"
+        print "getPeerList: Sent 501"
         f = 0
         t = G.nOfIteration
         while f == 0 and t > 0:
             #time.slpee(0.2)
             if peer.recieveTextPacket() == G.C_502:
-                print "Recieved 502"
+                print "getPeerList: Recieved 502"
                 #peer.sendTextPacket(G.C_102)
                 #print "sent 102"
                 pickledPeerList = peer.recieveTextPacket()
                 if pickledPeerList != None:
                     peer_list = pickle.loads()
-                    print "Peer list obtained"
+                    print "getPeerList: Peer list obtained"
                     peer.sendTextPacket(G.C_102)
-                    print "sent 102"
+                    print "getPeerList: sent 102"
                     f = 1
+                    print "getPeerList : peer list ", peer_list
                     return peer_list
             t = t -1 
         return None
@@ -107,7 +108,10 @@ class NetworkHandler:
         while f == 0 and t > 0:
             if peer.recieveTextPacket() == G.C_602:
                 peer.sendTextPacket(G.C_102)
-                addr_book = pickle.loads(peer.recieveTextPacket())
+                pickledAddrBook = peer.recieveTextPacket()
+                if pickledAddrBook == None:
+                    continue
+                addr_book = pickle.loads(pickledAddrBook)
                 peer.sendTextPacket(G.C_102)
                 f = 1
                 self.AddrBook = addr_book
@@ -138,11 +142,11 @@ class NetworkHandler:
                         pass
                     return peer
                 else:
-                    print "Reciever unidentified"
+                    print "callPeer: Reciever unidentified"
             else:
-                print "Call rejected"
+                print "callPeer: Call rejected"
                     
-        print "Address not a peer. Trying to establish connection"
+        print "callPeer: Address not a peer. Trying to establish connection"
         peer = p2p.Peer(net_addr,0)
         
         if self.connect2peer(peer):
@@ -176,9 +180,9 @@ class NetworkHandler:
             while True and f1:
                 #peer.makeConnection()
                 packet = peer.recieveTextPacket()
-                print "Recieved",packet
+                #print "Recieved",packet
                 if packet == G.C_501:
-                    print "Recieved 501"
+                    print "PeerListener: Recieved 501"
                     peer.sendTextPacket(G.C_502)
                     peer.sendTextPacket(pickle.dumps(self.peer_list))
                     while peer.recieveTextPacket() != G.C_102:
@@ -187,7 +191,7 @@ class NetworkHandler:
                     peer.sendTextPacket(G.C_702)
                     AddrBookDelta = pickle.loads(peer.recieveTextPacket())
                     addToAddrBook(AddrBookDelta)
-                    print "Address Book delta updated"
+                    print "PeerListener: Address Book delta updated"
                     
                 elif packet == G.C_601:
                     peer.sendTextPacket(G.C_602)
@@ -199,27 +203,27 @@ class NetworkHandler:
                 elif packet == G.C_801:
                     #Incoming call
                     f = 0
-                    print "Incoming call, recieved 801"
+                    print "PeerListener: Incoming call, recieved 801"
                     peer.sendTextPacket(G.C_802)
-                    print "sent 802"
+                    print "PeerListener: sent 802"
                     addr = peer.recieveTextPacket()
                     ad1, pub_key_hash_other = addr.split("-")
                     if ad1 == G.C_803:
-                        print "Recieved 803"
+                        print "PeerListener: Recieved 803"
                         for contact in contacts:
                             if contact.h == pub_key_hash_other:
-                                print "Caller identified"
+                                print "PeerListener: Caller identified"
                                 peer.sendTextPacket(G.C_803+"-"+crypto.pubKeyHashSelf())
-                                print "Address verification sent 803"
+                                print "PeerListener: Address verification sent 803"
                                 peer.recieveTextPacket()
-                                print "Recieved 102"
+                                print "PeerListener: Recieved 102"
                                 peer.sendTextPacket(G.C_805)
-                                print "sent 805"
+                                print "PeerListener: sent 805"
                                 callInterrupt(1,peer)
                                 #Call incoming call interrupt with contact, and peer
                                 f = 1
                         if f == 0:
-                            print "Caller not identified"
+                            print "PeerListener: Caller not identified"
 
             
                             
