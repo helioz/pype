@@ -99,4 +99,7 @@ class AVHandler:
             threading.Thread(target = self.video_read).start()
         except:
             print ("AVHandler.callAV() failed")
+            threading.Thread(target = self.video_send).join()
+            threading.Thread(target = self.audio_send).join()
+            threading.Thread(target = self.video_read).join()
 
