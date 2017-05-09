@@ -36,6 +36,6 @@ def testNetwork():
     
 def run_diag():
     #testCrypto()
-    #testNetwork()
+    testNetwork()
 
 #run_diag()

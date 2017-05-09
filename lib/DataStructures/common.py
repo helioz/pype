@@ -69,7 +69,7 @@ class Pype:
         ##Sets current key to 0
         self.network = NetworkHandler(self.crypto)
         ##Finds current net address
-
+        self.runPype()
         
     def runPype(self):
         self.peerThreads = []

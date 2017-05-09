@@ -27,7 +27,7 @@ class AVHandler:
 
         
     def video_send(self):
-        self.cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(0)
         while not self.callEnd:
             ret, vframe = cap.read()
             cv2.imshow('frame',vframe)
@@ -49,7 +49,7 @@ class AVHandler:
 
     def audio_send(self):
         s = pyaudio.PyAudio()
-        stream = s.open(format=p.get_format_from_width(self.WIDTH),
+        stream = s.open(format=s.get_format_from_width(self.WIDTH),
                 channels=self.CHANNELS,
                 rate=self.RATE,
                 output=True,
@@ -66,7 +66,7 @@ class AVHandler:
             #s.close()
         return
 
-    def video_read():
+    def video_read(self):
         p = pyaudio.PyAudio()
         stream = p.open(format=p.get_format_from_width(self.WIDTH),
                         channels=self.CHANNELS,
