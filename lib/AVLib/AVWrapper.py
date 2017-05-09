@@ -57,7 +57,7 @@ class AVHandler:
 
         while not self.callEnd:
             print("*recording")
-            adata  = stream.read(CHUNK)
+            adata  = stream.read(self.CHUNK)
             self.peer.sendMediaPacket("A"+adata)
             print("*done recording")
             #stream.stop_stream()
