@@ -30,7 +30,7 @@ class Peer:
 
 	self.s.connect(netAlgo.stringToTuple(self.net_addr))
 	self.isPunched = False
-	self.s.settimeout(None)
+        self.s.settimeout(G.punchTimeout)
         self.supportServer = supportServer
 
     def makeConnection(self):
@@ -59,15 +59,15 @@ class Peer:
 	return False
 
     def sendMediaPacket(self, data_bStream):
+	    self.s.send(data_bStream)
         ## Function to send UDP packet to peer
-        return
 
     def recieveMediaPacket(self):
-        ## Function to recieve UDP packets
+	data_bStream = self.s.recv(G.packet_maxsize)
         return data_bStream
 
     def sendTextPacket(self, data_bStream):
-        self.s.settimeout(None)
+        
         try:
 	    self.s.send(data_bStream)
             return True
@@ -76,7 +76,7 @@ class Peer:
             return False
     
     def recieveTextPacket(self):
-        self.s.settimeout(G.punchTimeout)
+
 	try:
 	    data_bStream = self.s.recv(G.packet_maxsize)
 	    if data_bStream != 'punched' and data_bStream != 'punch' and data_bStream != None :
@@ -122,6 +122,7 @@ class SupportServer:
         self.ip_addr = G.IPADDR_support_server
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.s.settimeout(G.punchTimeout)
         for p in range(G.nOfIteration):
             try:
 	        self.s.bind(('',G.PORT_local))
@@ -133,6 +134,34 @@ class SupportServer:
         self.s.connect((self.ip_addr, G.PORT_support_server))
 
 
+    def getAddress(self):  #Returns net_addr of self
+        while True:
+            self.sendTextPacket("somestring")
+            addr = self.recieveTextPacket()
+            if addr != None:
+                return addr
+
+    def getFirstPeer(self):
+        return addr
+    
+    def getcon(self, addr):
+        msg = getconm + separator + addr
+        self.s.send(msg)
+        print "getcon sent ", msg
+        msg = self.s.recv(G.packet_maxsize)
+        #if msg != endm :
+        #    self.getcon(addr)
+
+    def poll(self):
+        print "Called poll"
+        self.s.send(pollm)
+        print "poll sent", pollm
+        msg = self.s.recv(G.packet_maxsize)
+        duties = msg.split(separator)
+        if duties[-1] == endm :
+            del duties[-1]
+        return duties
+        
     def sendTextPacket(self, packet):
         ##Send UDP packet to server
         try:
@@ -147,8 +176,8 @@ class SupportServer:
         try:
 	     packet = self.s.recv(G.packet_maxsize)
 	     return packet
-	except socket.error, msg:
-	    print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+	except socket.error:
+	    print 'Packet recieve error at supportServer'
             return None
 
 

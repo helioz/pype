@@ -3,11 +3,11 @@ version_no = "0.0.4"
 
 MAX_Peers = 10
 
-IPADDR_support_server = "127.0.0.1"
-PORT_support_server = 80
+IPADDR_support_server = "31.171.246.149"
+PORT_support_server = 9898
 
 import random
-PORT_local = random.choice([6500,6600, 6661, 6662])
+PORT_local = random.choice(range(6000,7000))
 NET_ADDR_self = "127.0.0.1:3457"
 
 
@@ -16,11 +16,15 @@ contacts_file = "Resources/contacts.binary"
 
 key_size = 1024
 
+
+frame_rate = 1.0/24.0
+
 ##Network globals
 packet_maxsize = 4096
 punchTimeout = 10
 nOfIteration = 10
-waiting_time = 10
+waiting_time = 5
+
 
 #Network Codes
 

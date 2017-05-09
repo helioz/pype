@@ -11,7 +11,6 @@ import threading
 import random
 import time
 
-noCallGlobal = True
 
 class PeerListener(threading.Thread):
     def __init__(self, threadID, peer, listenerFunc):
@@ -24,6 +23,16 @@ class PeerListener(threading.Thread):
         self.listenerFunc(self.peer)
         print "Closing connection to peer :",self.peer.net_addr
 ## struct net_addr (ip_addr, port)
+
+class ServerPollThread(threading.Thread):
+    def __init__(self, listenerFunc):
+        self.listenerFunc = listenerFunc
+    def run(self):
+        print "Running server poll thread"
+        self.listenerFunc()
+
+
+
 
 class Signature:
     def __init__(self, net_addr, hash_addr, meta_data):
@@ -47,7 +56,8 @@ class Contact:
 
 class Pype:
     def __init__(self):
-        global noCallGlobal
+        self.thread_count = 0
+        self.newPeers = False
         #Initialising bottom layers
         self.crypto = CryptoHandler()
         ##Loads keyring from file
@@ -56,47 +66,67 @@ class Pype:
         self.network = NetworkHandler(self.crypto)
         ##Finds current net address
         self.multi = AVHandler()
-
+        
+    def runPype():
         self.peerThreads = []
+
+        #Server listener thread
+        self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
+        self.serverPollThread.start()
+        
         
         while not self.network.getFirstPeer():
             print "Failed to get first peer. Retrying...."
-            time.sleep(1)
+            time.sleep(3)
         #Get first peer from server
 
         #Get address book
-        self.network.getAddrBook(self.network.peer_list[0][0])
+
         #Update address book with self address
-        AddrBookDelta = [(self.crypto.pubKeyHashSelf(), self.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.crypto.pubKeyHashSelf(), 0)))]
+
         #Populate peer_list
         for p in self.network.peer_list:
             peer_list = self.network.getPeerList(p[0])
             for peer in peer_list:
-                if random.choice([1,2,3]) == 3:
+                #if random.choice([1,2,3]) == 3:
+                if peer[0].net_addr != GLOBALS.NET_ADDR_self:
                     self.network.connect2peer(peer[0])
 
+                    
+        self.network.getAddrBook(self.network.peer_list[0][0])
+        AddrBookDelta = [(self.crypto.pubKeyHashSelf(), self.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.crypto.pubKeyHashSelf(), 0)))]
         network.addToAddrBook(AddrBookDelta)
         
         #Listening to all peers as threads
-        self.thread_count = 0
+
         for peer in self.network.peer_list:
-            self.peerThreads.append(PeerListener(thread_count, peer[0], self.network.PeerListenerThread))
+            self.peerThreads.append(PeerListener(thread_count, peer[0], self.network.PeerListenerThread, self.mainInterrupt))
             self.peerThreads[thread_count].start()
             self.thread_count = self.thread_count + 1
             
-
-        try:
-            while True:
-                while noCallGlobal:
-                    #listenToServer
-                    pass
-
-        except KeyboardInterrupt:
-            print "Fin"
+                        
+                    
+                        
+        
             
-            
+
+    def mainInterrupt(control, var):
+        if control == 1:
+            pass #Start calling thread with var as peer
                 
-                
+    def serverPollThreadFunc(self):
+        while True:
+            if not self.newPeers:
+                connList = self.network.supportServer.poll()
+                for adr in connList:
+                    newPeer = p2p.Peer(adr, self.network.supportServer)
+                    if self.network.connect2peer(newPeer):
+                        self.peerThreads.append(PeerListener(thread_count, newPeer, self.network.PeerListenerThread), self.mainInterrupt)
+                        self.peerThreads[thread_count].start()
+                        self.thread_count = self.thread_count + 1
+                    
+            time.sleep(5)
+
             
 
         

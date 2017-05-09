@@ -16,37 +16,40 @@ class NetworkHandler:
         self.AddrBook = [("hash_address","encrypted_signature")]
         self.crypto = crypto
         self.AddrDeltaDict = ["hash"]
-        self.findNetAddrSelf()
-        
-        
-    def findNetAddrSelf(self):
-        G.NET_ADDR_self = "127.0.0.1:14796" ##Fill function
+        G.NET_ADDR_self = self.supportServer.getAddress()
+        print G.NET_ADDR_self
+
+
         
     def getFirstPeer(self):
         ##Returns the net_addr of first peer returned by support server
-        f = 0
-        t = G.nOfIteration
-        while f == 0 and t > 0:
-            self.supportServer.sendTextPacket(G.C_401)
-            addr = self.supportServer.recieveTextPacket()
-            if addr == None:
-                t = t - 1
+        # f = 0
+        # t = G.nOfIteration
+        # while f == 0 and t > 0:
+        #     self.supportServer.sendTextPacket(G.C_401)
+        #     addr = self.supportServer.recieveTextPacket()
+        #     if addr == None:
+        #         t = t - 1
+        #         continue
+        #     elif addr[:7] == G.C_102:
+        #         self.supportServer.sendTextPacket(G.C_102)
+        #         addr = addr[8:]
+        while True:
+            addr = self.supportServer.getFirstPeer()
+            if addr == 'end':
+                time.sleep(G.waiting_time)
                 continue
-            elif addr[:7] == G.C_102:
-                self.supportServer.sendTextPacket(G.C_102)
-                addr = addr[8:]
-                
-                peer = p2p.Peer(addr, self.supportServer)
+            if addr == G.NET_ADDR_self:
+                time.sleep(G.waiting_time)
+                continue
+            
+            peer = p2p.Peer(addr, self.supportServer)
+            print "First peer object made"
+            self.supportServer.getcon(peer.net_addr)
+            if self.connect2peer(peer):
+                print "Connected to peer"
+                return True
 
-                if self.connect2peer(peer):
-                    f = 1
-                    break      
-            t = t - 1
-        if f == 0:
-            print "No peers found"
-            return False
-        else:
-            return True
             
             
             
@@ -56,6 +59,7 @@ class NetworkHandler:
         if (peer, 0) in self.peer_list:
             return True
         while (not f) and t>0:
+            #self.supportServer.getcon(peer.net_addr)
             if peer.makeConnection():
                 f = 1
                 break
@@ -153,8 +157,10 @@ class NetworkHandler:
             self.AddrBook = self.AddrBook+AddrBookDelta
             self.AddrDeltaDict.append(h)
             self.pushAddrBookDelta(AddrBookDelta)
-                              
-    def PeerListenerThread(self, peer):
+
+
+            
+    def PeerListenerThread(self, peer, mainInterrupt):
         try:
             while True:
                 packet = peer.recieveTextPacket()
@@ -197,10 +203,13 @@ class NetworkHandler:
                                 print "Recieved 102"
                                 peer.sendTextPacket(G.C_805)
                                 print "sent 805"
+                                mainInterrupt(1,peer)
                                 #Call incoming call interrupt with contact, and peer
                                 f = 1
                         if f == 0:
                             print "Caller not identified"
+
+            
                     
         except KeyboardInterrupt:
             print "Keyboard interrupted"
