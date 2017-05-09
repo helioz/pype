@@ -30,7 +30,7 @@ class AVHandler:
         cap = cv2.VideoCapture(0)
         while not self.callEnd:
             ret, vframe = cap.read()
-            cv2.imshow('frame',vframe)
+            cv2.imshow('Self',vframe)
             time.sleep(G.frame_rate)
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 15]
             result, encimg = cv2.imencode('.jpg', vframe, encode_param)
@@ -77,10 +77,10 @@ class AVHandler:
         while True:
             avdata = self.peer.recieveMediaPacket()
             if avdata[0] == "V":
-                vdata = avdata[1:]
-                vframe = numpy.fromstring (vdata,dtype=numpy.uint8)
-                decimg = cv2.imdecode(vframe, 1)
-                cv2.imshow('frame',decimg)
+                vdata1 = avdata[1:]
+                vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
+                decimg1 = cv2.imdecode(vframe1, 1)
+                cv2.imshow('External',decimg1)
                 if cv2.waitKey(1) & 0xFF == ord ('q'):
                     break
          #   if avdata[0] == "A":

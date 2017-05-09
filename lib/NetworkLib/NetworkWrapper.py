@@ -169,13 +169,8 @@ class NetworkHandler:
 
             
     def PeerListenerThread(self, peer, callInterrupt):
-        f1 = False
-        for i in range(5):
-            if peer.makeConnection():
-                f1 = True
-                self.numPeers = self.numPeers + 1
-                break
-            time.sleep(3)
+        if not peer.makeConnection():
+            return
         try:
             while True and f1:
                 #peer.makeConnection()
