@@ -179,6 +179,7 @@ class NetworkHandler:
                 if packet == G.C_501:
                     print "PeerListener: Recieved 501"
                     peer.sendTextPacket(G.C_502)
+                    print self.peer_list
                     peer.sendTextPacket(pickle.dumps(self.peer_list))
                     while peer.recieveTextPacket() != G.C_102:
                         peer.sendTextPacket(pickle.dumps(self.peer_list))

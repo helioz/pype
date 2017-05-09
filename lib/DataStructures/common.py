@@ -124,7 +124,7 @@ class Pype:
         print "runPype: getAddrBook"
         self.network.getAddrBook(self.network.peer_list[0][0])
         AddrBookDelta = [(self.crypto.pubKeyHashSelf(), self.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.crypto.pubKeyHashSelf(), 0)))]
-        network.addToAddrBook(AddrBookDelta)
+        self.network.addToAddrBook(AddrBookDelta)
         
         #Listening to all peers as threads
 
