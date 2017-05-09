@@ -70,7 +70,7 @@ class Pype:
         ##Sets current key to 0
         self.network = NetworkHandler(self.crypto)
         ##Finds current net address
-        #self.runPype()
+        self.runPype()
         
     def runPype(self):
         self.peerThreads = []
@@ -139,13 +139,15 @@ class Pype:
 
 
     def connectToFirstPeer(self):
+        print "connectToFirstPeer: Attempting connection to first peer"
         while True and self.notKillAll:
             firstPeerAddr = self.network.supportServer.getFirstPeer()
-            time.sleep(2)
+            
             if firstPeerAddr == 'end':
                 continue
             if firstPeerAddr == GLOBALS.NET_ADDR_self:
                 continue
+            time.sleep(2)
             firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
             if firstPeer.makeConnection():
                 self.network.peer_list.append((firstPeer,0))
