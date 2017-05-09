@@ -115,12 +115,11 @@ class P2PNetwork:
 
     def pushBroadcast(self, data_bStream, ctrlString1, ctrlString2):
         for p in self.nodeList:
-            p.createTCPStream()
-            p.sendTCP(ctrlString1)
-            if p.recieveTCP() == ctrlString2:
-                p.sendTCP(data_bStream)
-                print "pushBroadcast: Successfully sent to ", p.session_endpoints
-            p.destroyTCP()
+            p.sendTextPacket(ctrlString1)
+            if p.recieveTextPacket() == ctrlString2:
+                p.sendTextPacket(data_bStream)
+                print "pushBroadcast: Successfully sent to ", p.net_addr
+
 
 
 
