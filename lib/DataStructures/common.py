@@ -84,16 +84,21 @@ class Pype:
                 continue
             firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
             if firstPeer.makeConnection():
-                self.network.peer_list.append((firstPeer,0))
-                self.network.network.nodeList.append(firstPeer)
-                print "First peer connected"
-                self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread, self.callInterrupt))
-                self.peerThreads[self.thread_count].start()
-                self.thread_count = self.thread_count + 1
+                # self.network.peer_list.append((firstPeer,0))
+                # self.network.network.nodeList.append(firstPeer)
+                # print "First peer connected"
+                # self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread, self.callInterrupt))
+                # self.peerThreads[self.thread_count].start()
+                # self.thread_count = self.thread_count + 1
                 print "First peer thread started. Success"
                 break
-            
-            
+
+        #Test############
+        AVHandler(firstPeer).callAV()
+        return
+        #Test###########
+
+    
         #Server listener thread
         self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
         self.serverPollThread.start()
