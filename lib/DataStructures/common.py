@@ -72,17 +72,37 @@ class Pype:
         
     def runPype(self):
         self.peerThreads = []
-
+        
+        #First peer connection
+        while True:
+            firstPeerAddr = self.network.supportServer.getFirstPeer()
+            time.sleep(2)
+            if firstPeerAddr == 'end':
+                continue
+            if firstPeerAddr == GLOBALS.NET_ADDR_self:
+                continue
+            firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
+            if firstPeer.makeConnection():
+                self.network.peer_list.append((firstPeer,0))
+                self.network.network.nodeList.append(firstPeer)
+                print "First peer connected"
+                self.peerThreads.append(PeerListener(thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
+                self.peerThreads[thread_count].start()
+                self.thread_count = self.thread_count + 1
+                print "First peer thread started"
+                break
+            
+            
         #Server listener thread
         self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
         self.serverPollThread.start()
         
-        while True:
-            self.network.getFirstPeer()
-            time.sleep(5)
-            if self.network.numPeers > 0:
-                break
-            print "runPype: Failed to get first peer. Retrying...."
+        # while True:
+        #     self.network.getFirstPeer()
+        #     time.sleep(5)
+        #     if self.network.numPeers > 0:
+        #         break
+        #     print "runPype: Failed to get first peer. Retrying...."
             
         #Get first peer from server
 
