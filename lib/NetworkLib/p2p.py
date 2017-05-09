@@ -162,7 +162,10 @@ class SupportServer:
         msg = getconm + separator + addr
         self.s.send(msg)
         print "getcon(): sent ", msg
-        msg = self.s.recv(G.packet_maxsize)
+        try:
+            msg = self.s.recv(G.packet_maxsize)
+        except:
+            pass
         #if msg != endm :
         #    self.getcon(addr)
 

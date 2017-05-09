@@ -22,7 +22,7 @@ frame_rate = 1.0/24.0
 ##Network globals
 packet_maxsize = 4096
 punchTimeout = 10
-nOfIteration = 10
+nOfIteration = 4
 waiting_time = 5
 
 

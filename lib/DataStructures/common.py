@@ -62,19 +62,23 @@ class Pype:
         self.newPeerInterrupt = False
         self.newCallInterrupt = False
         self.calleePeer = 0
+        self.notKillAll = True
         #Initialising bottom layers
         self.crypto = CryptoHandler()
         ##Loads keyring from file
         ##Sets current key to 0
         self.network = NetworkHandler(self.crypto)
         ##Finds current net address
-        self.runPype()
+        try:
+            self.runPype()
+        except KeyboardInterrupt:
+            self.notKillAll = True
         
     def runPype(self):
         self.peerThreads = []
         
         #First peer connection
-        while True:
+        while True and self.notKillAll:
             firstPeerAddr = self.network.supportServer.getFirstPeer()
             time.sleep(2)
             if firstPeerAddr == 'end':
@@ -86,7 +90,7 @@ class Pype:
                 self.network.peer_list.append((firstPeer,0))
                 self.network.network.nodeList.append(firstPeer)
                 print "First peer connected"
-                self.peerThreads.append(PeerListener(self.thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
+                self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread, self.callInterrupt))
                 self.peerThreads[self.thread_count].start()
                 self.thread_count = self.thread_count + 1
                 print "First peer thread started. Success"
@@ -127,9 +131,10 @@ class Pype:
         #Listening to all peers as threads
 
         for peer in self.network.peer_list:
-            self.peerThreads.append(PeerListener(self.thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
-            self.peerThreads[self.thread_count].start()
-            self.thread_count = self.thread_count + 1
+            if peer.net_addr != GLOBALS.NET_ADDR_self:
+                self.peerThreads.append(PeerListener(self.thread_count, peer[0], self.network.PeerListenerThread, self.callInterrupt))
+                self.peerThreads[self.thread_count].start()
+                self.thread_count = self.thread_count + 1
 
                         
             
@@ -140,7 +145,7 @@ class Pype:
             self.calleePeer = peer
                 
     def serverPollThreadFunc(self):
-        while True:
+        while True and self.notKillAll:
             connList = self.network.supportServer.poll()
             
             if connList != None:

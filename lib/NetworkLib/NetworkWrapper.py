@@ -88,12 +88,14 @@ class NetworkHandler:
                 print "Recieved 502"
                 #peer.sendTextPacket(G.C_102)
                 #print "sent 102"
-                peer_list = pickle.loads(peer.recieveTextPacket())
-                print "Peer list obtained"
-                peer.sendTextPacket(G.C_102)
-                print "sent 102"
-                f = 1
-                return peer_list
+                pickledPeerList = peer.recieveTextPacket()
+                if pickledPeerList != None:
+                    peer_list = pickle.loads()
+                    print "Peer list obtained"
+                    peer.sendTextPacket(G.C_102)
+                    print "sent 102"
+                    f = 1
+                    return peer_list
             t = t -1 
         return None
 
