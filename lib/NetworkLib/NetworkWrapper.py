@@ -90,7 +90,7 @@ class NetworkHandler:
                 #print "sent 102"
                 pickledPeerList = peer.recieveTextPacket()
                 if pickledPeerList != None:
-                    peer_list = pickle.loads()
+                    peer_list = pickle.loads(pickledPeerList)
                     print "getPeerList: Peer list obtained"
                     peer.sendTextPacket(G.C_102)
                     print "getPeerList: sent 102"
@@ -172,7 +172,7 @@ class NetworkHandler:
         if not peer.makeConnection():
             return
         try:
-            while True and f1:
+            while True:
                 #peer.makeConnection()
                 packet = peer.recieveTextPacket()
                 #print "Recieved",packet
