@@ -83,8 +83,12 @@ class Peer:
             ## Function to send UDP packet to peer
 
     def recieveMediaPacket(self):
-	data_bStream = self.s.recv(G.packet_maxsize)
-        return data_bStream
+        self.s.settimeout(0.04)
+        try:
+	    data_bStream = self.s.recv(G.packet_maxsize)
+            return data_bStream
+        except:
+            pass
 
     def sendTextPacket(self, data_bStream):
         
@@ -98,7 +102,7 @@ class Peer:
             return False
     
     def recieveTextPacket(self):
-
+        self.s.settimeout(G.punchTimeout)
 	try:
 	    data_bStream = self.s.recv(G.packet_maxsize)
 	    if data_bStream != 'punched' and data_bStream != 'punch' and data_bStream != None :
