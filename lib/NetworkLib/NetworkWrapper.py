@@ -84,7 +84,7 @@ class NetworkHandler:
                     #print pickledPeerList
                     peer_list_u = pickle.loads(pickledPeerList)
                     peerList = []
-                    for peerAdr in peer_list_u:
+                    for peerAddr in peer_list_u:
                         peerList.append( ( p2p.Peer(peerAddr, self.supportServer), 0 ) )
                     print "getPeerList: Obtained peer_list :", peerList
                     #peer_list = []
