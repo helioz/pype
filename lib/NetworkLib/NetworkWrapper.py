@@ -135,6 +135,7 @@ class NetworkHandler:
         ##Used to call a peer.
         ##Obtain peer address
         pub_key_hash_other = self.crypto.pubKeyHash(contact.keyN, contact.keyE)
+        pub_key_hash_self = self.crypto.pubKeyHashSelf()
         p = None
         sign = None
         for ad in self.AddrBook:
@@ -175,7 +176,7 @@ class NetworkHandler:
             self.AddrBook = self.AddrBook+AddrBookDelta
             self.AddrDeltaDict.append(h)
             self.pushAddrBookDelta(AddrBookDelta)
-
+            print "addToAddrBook: updated AddrBook", self.AddrBook
 
             
     def PeerListenerThread(self, peer, callInterrupt):
