@@ -115,6 +115,7 @@ class Pype:
                 #if random.choice([1,2,3]) == 3:
                 if peer[0].net_addr != GLOBALS.NET_ADDR_self and peer not in self.network.peer_list:
                     self.network.connect2peer(peer[0])
+            self.network.peer_list
                     
         #Launching peer threads
         while self.thread_count < len(self.network.peer_list):
@@ -128,6 +129,7 @@ class Pype:
         self.network.getAddrBook(self.network.peer_list[0][0])
         AddrBookDelta = [(self.crypto.pubKeyHashSelf(), self.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.crypto.pubKeyHashSelf(), 0)))]
         self.network.addToAddrBook(AddrBookDelta)
+        print "runPype: AddrBookDelta published"
         
         #Listening to all peers as threads
 

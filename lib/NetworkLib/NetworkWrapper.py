@@ -198,15 +198,15 @@ class NetworkHandler:
                     AddrBookDelta_u = peer.recieveTextPacket()
                     if AddrBookDelta_u != None:
                         AddrBookDelta = pickle.loads(AddrBookDelta_u)
-                    addToAddrBook(AddrBookDelta)
+                    self.addToAddrBook(AddrBookDelta)
                     print "PeerListener: Address Book delta updated"
                     
                 elif packet == G.C_601:
                     peer.sendTextPacket(G.C_602)
                     if peer.recieveTextPacket() == G.C_102:
-                        peer.sendTextPacket(pickle.dumps(self.addr_book))
+                        peer.sendTextPacket(pickle.dumps(self.AddrBook))
                     if peer.recieveTextPacket() != G.C_102:
-                        peer.sendTextPacket(pickle.dumps(self.addr_book))
+                        peer.sendTextPacket(pickle.dumps(self.AddrBook))
 
                 elif packet == G.C_801:
                     #Incoming call
