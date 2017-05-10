@@ -1,5 +1,9 @@
 import lib.NetworkLib.p2p as p2p
 from lib.AVLib.AVWrapper import AVHandler
 import Resources._globals as G
-peer = p2p.Peer("127.0.0.1+8052", p2p.SupportServer())
+
+
+G.PORT_local = 7500
+peer = p2p.Peer("192.168.1.103+7501", p2p.SupportServer())
+
 AVHandler(peer).callAV()

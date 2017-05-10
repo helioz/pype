@@ -43,7 +43,7 @@ class AVHandler:
             d = encimg.flatten ()
             s = d.tostring ()
             #print sys.getsizeof(s)
-            #self.peer.sendMediaPacket("V"+s)
+            self.peer.sendMediaPacket("V"+s)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.peer.sendMediaPacket("E")
                 break
@@ -72,12 +72,12 @@ class AVHandler:
         return
 
     def video_read(self):
-        #p = pyaudio.PyAudio()
-        #stream = p.open(format=p.get_format_from_width(self.WIDTH),
-        #                channels=self.CHANNELS,
-        #                rate=self.RATE,
-        #                output=True,
-        #                frames_per_buffer=self.CHUNK)
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(self.WIDTH),
+                       channels=self.CHANNELS,
+                       rate=self.RATE,
+                       output=True,
+                       frames_per_buffer=self.CHUNK)
         
         while True:
             try:
@@ -96,6 +96,7 @@ class AVHandler:
                 stream.write(adata)
             if avdata[0] == "E":
                 self.callEnd = True
+                cv2.destroyAllWindows()
                 break
 
 
