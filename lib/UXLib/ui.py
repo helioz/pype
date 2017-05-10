@@ -163,7 +163,7 @@ class UI():
         self.ErrorWindow.hide()
 
     def AddContactToList(self, button):
-        c = common.Contact(self.nameEntry.get_text(), self.pubKeyeEntry.get_text(), self.pubKeynEntry.get_text() )
+        c = common.Contact(self.nameEntry.get_text(), int( self.pubKeyeEntry.get_text() ), int( self.pubKeynEntry.get_text() ) )
         self.AddContactScreen.hide()
         self.contactStore.append([c.name])
         self.numOfContacts = self.numOfContacts + 1

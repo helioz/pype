@@ -119,7 +119,7 @@ class P2PNetwork:
     def getPeerByAddr(self, net_addr):
         for p in self.nodeList:
             if p.net_addr == net_addr:
-                return peer
+                return p
         print "getPeerByAddr: No peer with corresponding address"
         return None
 
