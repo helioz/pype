@@ -134,11 +134,13 @@ class NetworkHandler:
     def callPeer(self, contact):
         ##Used to call a peer.
         ##Obtain peer address
-        pub_key_hash_other = crypto.pubKeyHash(contact.keyN, contact.keyE)
+        pub_key_hash_other = self.crypto.pubKeyHash(contact.keyN, contact.keyE)
+        p = None
+        sign = None
         for ad in self.AddrBook:
             if ad[0] == pub_key_hash_other:
-                sign = crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature
-        p = self.network.getPeerByAddr(sign.net_addr)
+                sign = self.crypto.decryptSignature(ad[1],toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature
+                p = self.network.getPeerByAddr(sign.net_addr)
         if p != None:
             p.sendTextPacket(G.C_801)
             if p.recieveTextPacket() == G.C_802:
@@ -152,12 +154,12 @@ class NetworkHandler:
                     print "callPeer: Reciever unidentified"
             else:
                 print "callPeer: Call rejected"
-                    
-        print "callPeer: Address not a peer. Trying to establish connection"
-        peer = p2p.Peer(net_addr,0)
+        if sign != None:
+            print "callPeer: Address not a peer. Trying to establish connection"
+            peer = p2p.Peer(sign.net_addr,0)
         
-        if self.connect2peer(peer):
-            return self.callPeer(net_addr, pub_key_hash_self,pub_key_hash_other)
+            if self.connect2peer(peer):
+                return self.callPeer(contact)
         else:
             print "Peer does not exist"
             return None

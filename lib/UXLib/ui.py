@@ -4,6 +4,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import lib.DataStructures.common as common
 from lib.AVLib.AVWrapper import AVHandler
+import threading
+import time
 
 class Handler:
     def onDeleteWindow(self, *args):
@@ -63,14 +65,22 @@ class UI():
         self.loadKeyCB.connect("changed", self.setKeyCBHandler)
         self.fillkeyCB()
 
+        self.makeCallButton = self.builder.get_object("button1")
+        self.makeCallButton.connect("clicked", self.makeCallFunc)
+        
         self.callAnswerScreen = self.builder.get_object("IncomingCallScreen")
         self.callAnswerButton = self.builder.get_object("answer")
         self.callRejectButton = self.builder.get_object("reject")
 
         self.callAnswerButton.connect("clicked", self.callAnswerFunc)
         self.callRejectButton.connect("clicked", self.callRejectFunc)
+
+        self.copyPbKeyButton = self.builder.get_object("copyPubKey")
+        self.copyPbKeyButton.connect("clicked", self.copyPbKeyFunc)
         
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
+
+        threading.Thread(target = self.checkCallThreadFunc).start()
         
         #AddContactScreen.show_all()
         #CallingScreen.show_all()
@@ -79,18 +89,31 @@ class UI():
         #self.pype.runPype()
         Gtk.main()
 
+    def copyPbKeyFunc(self, button):
+        with open(GLOBAL.nameCard, "wb") as fp:
+            fp.write("keyE : "+str(self.pype.crypto.public_key().e)+"\n")
+            fp.write("keyN : "+str(self.pype.crypto.public_key().n))
+            print "Namce card written"
+        
+    def makeCallFunc(self, button):
+        ind = self.contactCBox.get_active()
+        contacts = common.loadContacts()
+        print contacts[ind].name
+        self.pype.network.callPeer(contacts[ind])
+        
     def checkCallThreadFunc(self):
         while self.pype.notKillAll:
             time.sleep(2)
             if self.pype.newCallInterrupt:
                 self.callAnswerScreen.show_all()
-            
-    def callAnswerFunc(self):
+        return
+    
+    def callAnswerFunc(self, button):
         AVHandler(self.pype.calleePeer).callAV()
         self.pype.newCallInterrupt = False
         self.callAnswerScreen.hide()
         return
-    def callRejectFunc(self):
+    def callRejectFunc(self, button):
         AVHandler(self.pype.calleePeer).rejectAV()
         self.pype.newCallInterrupt = False
         self.callAnswerScreen.hide()

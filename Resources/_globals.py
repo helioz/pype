@@ -13,6 +13,7 @@ NET_ADDR_self = "127.0.0.1:3457"
 
 key_ring_binary = "Resources/key_ring.binary"
 contacts_file = "Resources/contacts.binary"
+nameCard = "Resources/nameCardFile.text"
 
 key_size = 1024
 

@@ -43,7 +43,7 @@ class Peer:
 
     def makeConnection(self):
         ##Hole punches a connection to peer and returns true
-        self.supportServer.getcon(self.net_addr)
+        #self.supportServer.getcon(self.net_addr)
         for i in range(G.nOfIteration) :
             #print "makeConn(): Running make connection on ", self.net_addr
 	    if self.sendTextPacket('punch'):
