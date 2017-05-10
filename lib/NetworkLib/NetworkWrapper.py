@@ -182,8 +182,8 @@ class NetworkHandler:
 
             
     def PeerListenerThread(self, peer, callInterrupt):
-        if not peer.makeConnection():
-            return
+        #if not peer.makeConnection():
+        #    return
         try:
             while True:
                 #peer.makeConnection()

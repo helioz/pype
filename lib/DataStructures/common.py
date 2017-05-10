@@ -117,7 +117,8 @@ class Pype:
                     self.network.connect2peer(peer[0])
             self.network.peer_list
                     
-        #Launching peer threads
+
+            #Launching peer threads
         while self.thread_count < len(self.network.peer_list):
             if peer[0].net_addr != GLOBALS.NET_ADDR_self:
                 self.peerThreads.append(PeerListener(self.thread_count, self.network.peer_list[self.thread_count][0], self.network.PeerListenerThread, self.callInterrupt))
