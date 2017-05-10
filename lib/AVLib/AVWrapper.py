@@ -28,8 +28,12 @@ class AVHandler:
         
     def video_send(self):
         cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            cap.open()
         while not self.callEnd:
             ret, vframe = cap.read()
+            if not ret:
+                continue
             cv2.imshow('Self',vframe)
             time.sleep(G.frame_rate)
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 15]
@@ -39,12 +43,13 @@ class AVHandler:
             d = encimg.flatten ()
             s = d.tostring ()
             #print sys.getsizeof(s)
-            self.peer.sendMediaPacket("V"+s)
+            #self.peer.sendMediaPacket("V"+s)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.peer.sendMediaPacket("E")
                 break
         
         cap.release()
+        cv2.destroyAllWindows()
         return
 
     def audio_send(self):
@@ -75,7 +80,10 @@ class AVHandler:
         #                frames_per_buffer=self.CHUNK)
         
         while True:
-            avdata = self.peer.recieveMediaPacket()
+            try:
+                avdata = self.peer.recieveMediaPacket()
+            except:
+                continue
             if avdata[0] == "V":
                 vdata1 = avdata[1:]
                 vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
@@ -83,9 +91,9 @@ class AVHandler:
                 cv2.imshow('External',decimg1)
                 if cv2.waitKey(1) & 0xFF == ord ('q'):
                     break
-         #   if avdata[0] == "A":
-         #       adata  = avdata[1:]
-         #       stream.write(adata)
+            if avdata[0] == "A":
+                adata  = avdata[1:]
+                stream.write(adata)
             if avdata[0] == "E":
                 self.callEnd = True
                 break
@@ -95,11 +103,16 @@ class AVHandler:
         self.callEnd = False
         try:
             threading.Thread(target = self.video_send).start()
+            
             #threading.Thread(target = self.audio_send).start()
             threading.Thread(target = self.video_read).start()
         except:
             print ("AVHandler.callAV() failed")
-            threading.Thread(target = self.video_send).join()
-            #threading.Thread(target = self.audio_send).join()
-            threading.Thread(target = self.video_read).join()
+        time.sleep(1)
+        #threading.Thread(target = self.video_send).join()
+        #threading.Thread(target = self.audio_send).join()
+        #threading.Thread(target = self.video_read).join()
+
+
+
 
