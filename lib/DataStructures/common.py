@@ -151,7 +151,9 @@ class Pype:
             if firstPeerAddr == GLOBALS.NET_ADDR_self:
                 continue
             time.sleep(2)
+            print "connectToFirstPeer : ",firstPeerAddr
             firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
+            
             if firstPeer.makeConnection():
                 self.network.peer_list.append((firstPeer,0))
                 self.network.network.nodeList.append(firstPeer)

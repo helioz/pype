@@ -47,6 +47,7 @@ class Peer:
         for i in range(G.nOfIteration) :
             #print "makeConn(): Running make connection on ", self.net_addr
 	    if self.sendTextPacket('punch'):
+                print "makeConn: sent punch"
 	        self.s.settimeout(G.punchTimeout)
 	        #data = ''
 	        try :
@@ -55,7 +56,7 @@ class Peer:
                     time.sleep(1)
 		    continue
 	        if data == 'punch' :
-		    #print 'received punch\n'
+		    print 'received punch\n'
 		    self.sendTextPacket('punched')
 		    self.isPunched = True
 		    #self.s.settimeout(None)
