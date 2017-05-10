@@ -81,8 +81,8 @@ class Pype:
 
 
         #Server listener thread
-        #self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
-        #self.serverPollThread.start()
+        self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
+        self.serverPollThread.start()
         
         # while True:
         #     self.network.getFirstPeer()
@@ -169,15 +169,21 @@ class Pype:
                 return
 
     def serverPollThreadFunc(self):
+        time.sleep(random.choice(range(5)))
+
         while True and self.notKillAll:
-            while self.newCallInterrupt:
-                pass
+                   
+            while self.newCallInterrupt:  #Disable thread during call
+                time.sleep(10)
+            
             connList = self.network.supportServer.poll()
             
             if connList != None:
-                #print "server thread Connection list ", connList
+
                 connListNoDup = []
                 for adr in connList:
+                    if adr == GLOBALS.NET_ADDR_self:
+                        continue
                     if not (adr in connListNoDup):
                         connListNoDup.append(adr)
                 for adr in connListNoDup:
@@ -187,10 +193,10 @@ class Pype:
                         self.peerThreads[self.thread_count].start()
                         self.thread_count = self.thread_count + 1
                         print "Server thread makes new peer thread", newPeer.net_addr
-                    
-            #else:
-                #print "server thread No connection list obtained"
-            time.sleep(7)
+                    else:
+                        newPeer.makeConnection()
+                time.sleep(7)
+
 
             
 

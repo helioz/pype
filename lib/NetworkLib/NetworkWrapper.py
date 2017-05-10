@@ -59,7 +59,7 @@ class NetworkHandler:
         for p in self.peer_list:
             if p[0] == peer:
                 print "connect2peer: peer exists"
-                return True
+                return False  ##If changed to True, fix peerListener and peer connecter threads
         self.supportServer.getcon(peer.net_addr)
         if peer.makeConnection():
             self.peer_list.append((peer, 0))
