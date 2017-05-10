@@ -36,6 +36,7 @@ class AVHandler:
                 continue
             cv2.imshow('Self',vframe)
             time.sleep(G.frame_rate)
+            
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 15]
             result, encimg = cv2.imencode('.jpg', vframe, encode_param)
             #decimg = cv2.imdecode(encimg, 1)
@@ -44,6 +45,7 @@ class AVHandler:
             s = d.tostring ()
             #print sys.getsizeof(s)
             self.peer.sendMediaPacket("V"+s)
+            #print "video_sent: Video"
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.peer.sendMediaPacket("E")
                 self.callEnd = True
@@ -60,13 +62,13 @@ class AVHandler:
                 rate=self.RATE,
                 input=True,
                 frames_per_buffer=self.CHUNK)
-
+        print "audio_send: Recording audio"
         while not self.callEnd:
-            print("*recording")
+            #print("*recording")
             adata  = stream.read(self.CHUNK)
             
             self.peer.sendMediaPacket("A"+adata)
-            print("*done recording")
+            #print("*done recording")
             #stream.stop_stream()
             #stream.close()
             #p.terminate()
@@ -84,14 +86,14 @@ class AVHandler:
         
         while True:
             try:
-                print "Waiting for video"
                 avdata = self.peer.recieveMediaPacket()
-                print "AV packet recieved"
+                #print "AV packet recieved"
             except:
                 if self.callEnd:
                     break
                 continue
             if avdata[0] == "V":
+                #print "video_read: Video packet"
                 vdata1 = avdata[1:]
                 vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
                 decimg1 = cv2.imdecode(vframe1, 1)
@@ -99,6 +101,7 @@ class AVHandler:
                 if cv2.waitKey(1) & 0xFF == ord ('q'):
                     break
             if avdata[0] == "A":
+                #print "video_read: Audio packet"
                 adata  = avdata[1:]
                 stream.write(adata)
             if avdata[0] == "E":
@@ -112,16 +115,21 @@ class AVHandler:
     def callAV(self):
         self.callEnd = False
         try:
-            #threading.Thread(target = self.video_send).start()
-            threading.Thread(target = self.audio_send).start()
-            #threading.Thread(target = self.video_read).start()
+            videoSendThread = threading.Thread(target = self.video_send)
+            audioSendThread = threading.Thread(target = self.audio_send)
+            avReadThread = threading.Thread(target = self.video_read)
+            videoSendThread.start()
+            audioSendThread.start()
+            avReadThread.start()
         except:
             print ("AVHandler.callAV() failed")
-        time.sleep(1)
-        #threading.Thread(target = self.video_send).join()
-        #threading.Thread(target = self.audio_send).join()
-        #threading.Thread(target = self.video_read).join()
+        videoSendThread.join()
+        print "End call"
 
-
-
+        
+    def rejectAV(self):
+        for i in range(G.noOfIterations):
+            time.sleep(0.5)
+            self.peer.sendMediaPacket("E")
+        return
 

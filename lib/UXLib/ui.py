@@ -3,6 +3,7 @@ import Resources._globals as GLOBAL
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import lib.DataStructures.common as common
+from lib.AVLib.AVWrapper import AVHandler
 
 class Handler:
     def onDeleteWindow(self, *args):
@@ -62,6 +63,13 @@ class UI():
         self.loadKeyCB.connect("changed", self.setKeyCBHandler)
         self.fillkeyCB()
 
+        self.callAnswerScreen = self.builder.get_object("IncomingCallScreen")
+        self.callAnswerButton = self.builder.get_object("answer")
+        self.callRejectButton = self.builder.get_object("reject")
+
+        self.callAnswerButton.connect("clicked", self.callAnswerFunc)
+        self.callRejectButton.connect("clicked", self.callRejectFunc)
+        
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
         
         #AddContactScreen.show_all()
@@ -70,9 +78,24 @@ class UI():
         self.HomeScreen.show_all()
         #self.pype.runPype()
         Gtk.main()
+
+    def checkCallThreadFunc(self):
+        while self.pype.notKillAll:
+            time.sleep(2)
+            if self.pype.newCallInterrupt:
+                self.callAnswerScreen.show_all()
+            
+    def callAnswerFunc(self):
+        AVHandler(self.pype.calleePeer).callAV()
+        self.pype.newCallInterrupt = False
+        self.callAnswerScreen.hide()
+        return
+    def callRejectFunc(self):
+        AVHandler(self.pype.calleePeer).rejectAV()
+        self.pype.newCallInterrupt = False
+        self.callAnswerScreen.hide()
+        return
         
-
-
     def fillContactCBox(self):
         contacts = common.loadContacts()
         

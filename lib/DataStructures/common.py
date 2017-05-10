@@ -60,10 +60,13 @@ class Contact:
 class Pype:
     def __init__(self):
         self.thread_count = 0
+
         self.newPeerInterrupt = False
         self.newCallInterrupt = False
-        self.calleePeer = 0
         self.notKillAll = True
+        self.calleePeer = 0
+
+
         #Initialising bottom layers
         self.crypto = CryptoHandler()
         ##Loads keyring from file
@@ -162,6 +165,8 @@ class Pype:
 
     def serverPollThreadFunc(self):
         while True and self.notKillAll:
+            while self.newCallInterrupt:
+                pass
             connList = self.network.supportServer.poll()
             
             if connList != None:
