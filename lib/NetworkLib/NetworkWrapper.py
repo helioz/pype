@@ -79,6 +79,8 @@ class NetworkHandler:
             if peer.recieveTextPacket() == G.C_502:
                 print "getPeerList: Recieved 502"
                 pickledPeerList = peer.recieveTextPacket()
+                if pickledPeerList == None:
+                    continue
                 if pickledPeerList[0] == 'P':
                     pickledPeerList = pickledPeerList[1:]
                     #print pickledPeerList
