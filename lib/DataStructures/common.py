@@ -81,8 +81,8 @@ class Pype:
 
 
         #Server listener thread
-        self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
-        self.serverPollThread.start()
+        #self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
+        #self.serverPollThread.start()
         
         # while True:
         #     self.network.getFirstPeer()

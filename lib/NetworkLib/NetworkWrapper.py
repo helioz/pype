@@ -71,19 +71,16 @@ class NetworkHandler:
         
     def getPeerList(self, peer):
         ##Returns a peer_list from selected peer.
-        f = 0
         t = G.nOfIteration
-        while f == 0 and t > 0:
+        while t > 0:
             peer.sendTextPacket(G.C_501)
             print "getPeerList: Sent 501"
-
             #time.slpee(0.2)
             if peer.recieveTextPacket() == G.C_502:
                 print "getPeerList: Recieved 502"
-                #peer.sendTextPacket(G.C_102)
-                #print "sent 102"
                 pickledPeerList = peer.recieveTextPacket()
-                if pickledPeerList != None:
+                if pickledPeerList[0] == 'P':
+                    pickledPeerList = pickledPeerList[1:]
                     #print pickledPeerList
                     peer_list_u = pickle.loads(pickledPeerList)
                     print "getPeerList: Obtained peer_list :",peer_list_u
@@ -92,9 +89,9 @@ class NetworkHandler:
                     #    newPeer = (p2p.Peer(adr,self.supportServer), 0)
                     #    if newPeer not in peer_list:
                     #        peer_list.append( newPeer )
-                    print "getPeerList: Peer list obtained"
+                    #print "getPeerList: Peer list obtained"
                     #peer.sendTextPacket(G.C_102)
-                    print "getPeerList: sent 102"
+                    #print "getPeerList: sent 102"
                     #f = 1
                     #print "getPeerList : peer list ", peer_list
                     return peer_list_u
@@ -192,11 +189,11 @@ class NetworkHandler:
                     print "PeerListener: Recieved 501"
                     peer.sendTextPacket(G.C_502)
                     #print "PeerListener: Peer list to send", self.peer_list
-                    pl = []
-                    for it in self.peer_list:
-                        pl.append(it[0].net_addr)
-                    print "PeerListener: Peer list to send", pl
-                    peer.sendTextPacket(pickle.dumps(pl))
+                    #pl = []
+                    #for it in self.peer_list:
+                    #    pl.append(it[0].net_addr)
+                    print "PeerListener: Peer list to send", self.peer_list
+                    peer.sendTextPacket('P'+pickle.dumps(self.peer_list))
 
                 elif packet == G.C_701:
                     peer.sendTextPacket(G.C_702)
