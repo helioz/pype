@@ -46,6 +46,7 @@ class AVHandler:
             self.peer.sendMediaPacket("V"+s)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.peer.sendMediaPacket("E")
+                self.callEnd = True
                 break
         
         cap.release()
@@ -54,21 +55,23 @@ class AVHandler:
 
     def audio_send(self):
         s = pyaudio.PyAudio()
-        stream = s.open(format=s.get_format_from_width(self.WIDTH),
+        stream = s.open(format=self.AUDIO_FORMAT,
                 channels=self.CHANNELS,
                 rate=self.RATE,
-                output=True,
+                input=True,
                 frames_per_buffer=self.CHUNK)
 
         while not self.callEnd:
             print("*recording")
             adata  = stream.read(self.CHUNK)
+            
             self.peer.sendMediaPacket("A"+adata)
             print("*done recording")
             #stream.stop_stream()
             #stream.close()
             #p.terminate()
             #s.close()
+            
         return
 
     def video_read(self):
@@ -85,6 +88,8 @@ class AVHandler:
                 avdata = self.peer.recieveMediaPacket()
                 print "AV packet recieved"
             except:
+                if self.callEnd:
+                    break
                 continue
             if avdata[0] == "V":
                 vdata1 = avdata[1:]
@@ -100,14 +105,16 @@ class AVHandler:
                 self.callEnd = True
                 cv2.destroyAllWindows()
                 break
+            if self.callEnd:
+                break
 
 
     def callAV(self):
         self.callEnd = False
         try:
             #threading.Thread(target = self.video_send).start()
-            #threading.Thread(target = self.audio_send).start()
-            threading.Thread(target = self.video_read).start()
+            threading.Thread(target = self.audio_send).start()
+            #threading.Thread(target = self.video_read).start()
         except:
             print ("AVHandler.callAV() failed")
         time.sleep(1)

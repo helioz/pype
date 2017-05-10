@@ -4,6 +4,6 @@ import Resources._globals as G
 
 
 G.PORT_local = 7500
-peer = p2p.Peer("192.168.1.103+7501", p2p.SupportServer())
+peer = p2p.Peer("192.168.1.103+7500", p2p.SupportServer())
 
 AVHandler(peer).callAV()

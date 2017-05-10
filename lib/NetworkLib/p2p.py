@@ -70,8 +70,11 @@ class Peer:
     
 
     def sendMediaPacket(self, data_bStream):
+        try:
 	    self.s.send(data_bStream)
-        ## Function to send UDP packet to peer
+        except:
+            pass
+            ## Function to send UDP packet to peer
 
     def recieveMediaPacket(self):
 	data_bStream = self.s.recv(G.packet_maxsize)
