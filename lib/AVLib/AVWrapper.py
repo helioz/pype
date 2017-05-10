@@ -66,26 +66,31 @@ class AVHandler:
                     #print 'received data :',i
                 except:
                     continue
-            if avdata == None:
-                continue
+                
+                if avdata == None:
+                    continue
             
-            if avdata[0] == "V":
-                vdata1 = avdata[1:]
-                vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
-                decimg1 = cv2.imdecode(vframe1, 1)
-                cv2.imshow('Other',decimg1)
-                print 'decoded :',i
-                i=i+1
+                if avdata[0] == "V":
+                    vdata1 = avdata[1:]
+                    vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
+                    decimg1 = cv2.imdecode(vframe1, 1)
+                    cv2.imshow('Other',decimg1)
+                    print 'decoded :',i
+                    #i=i+1
             
         
-            elif avdata[0] == "A":
+                elif avdata[0] == "A":
                     adata  = avdata[1:]
                     stream.write(adata)
 
-            elif avdata[0] == 'E':
-                self.callEnd = True
+                elif avdata[0] == 'E':
+                    self.callEnd = True
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                self.peer.sendMediaPacket("E")
+                time.sleep(1)
+                self.peer.sendMediaPacket("E")
+                self.peer.sendMediaPacket("E")
                 self.peer.sendMediaPacket("E")
                 self.callEnd = True
                 break
