@@ -155,7 +155,7 @@ class NetworkHandler:
                 #if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
                 #p.sendTextPacket(G.C_102)
                 #p.recieveTextPacket()
-            return p
+            AVHandler(p).callAV()
             
         #     else:
         #         print "callPeer: Call rejected"
@@ -228,7 +228,7 @@ class NetworkHandler:
                 elif packet == G.C_801:
                     print "Got call"
                     callInterrupt(1,0)
-                    AVHandler(peer).sendAV()
+                    AVHandler(peer).callAV()
                     # #Incoming call
                     # f = 0
                     # print "PeerListener: Incoming call, recieved 801"
