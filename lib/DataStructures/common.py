@@ -132,9 +132,10 @@ class Pype:
 
         print "pypeRun: Initialisation Complete, starting UI"
         #Listening to all peers as threads
+        
+        threading.Thread(target = self.makeCall).start()
 
-
-                        
+        
             
 
     def callInterrupt(self, control, arg):
@@ -144,6 +145,11 @@ class Pype:
             self.newCallInterrupt = True
             self.calleePeer = arg
 
+    def makeCall(self):
+        while True:
+            if self.newCallInterrupt:
+                AVHandler(self.calleePeer).callAV()
+            time.sleep(5)
 
     def connectToFirstPeer(self):
         print "connectToFirstPeer: Attempting connection to first peer"

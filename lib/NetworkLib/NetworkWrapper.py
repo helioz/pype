@@ -225,6 +225,7 @@ class NetworkHandler:
                         peer.recieveTextPacket()
                     print "peerListener: sent AddrBook"
                 elif packet == G.C_801:
+                    print "Got call"
                     callInterrupt(1, peer)
                     # #Incoming call
                     # f = 0
