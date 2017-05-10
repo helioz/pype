@@ -114,6 +114,8 @@ class NetworkHandler:
                 #peer.sendTextPacket(G.C_102)
                 print "getAddrBook : Recieved 602"
                 pickledAddrBook = peer.recieveTextPacket()
+                if pickledAddrBook == None:
+                    continue
                 if pickledAddrBook[0] == 'A':
                     pickledAddrBook = pickledAddrBook[1:]
                     if pickledAddrBook == None:
