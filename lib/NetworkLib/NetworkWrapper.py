@@ -19,70 +19,64 @@ class NetworkHandler:
         self.AddrDeltaDict = ["hash"]
         G.NET_ADDR_self = self.supportServer.getAddress()
         print "pype running at IP: ",G.NET_ADDR_self
-        self.numPeers = 0
+        #self.numPeers = 0
 
 
         
-    def getFirstPeer(self):
-        ##Returns the net_addr of first peer returned by support server
-        # f = 0
-        # t = G.nOfIteration
-        # while f == 0 and t > 0:
-        #     self.supportServer.sendTextPacket(G.C_401)
-        #     addr = self.supportServer.recieveTextPacket()
-        #     if addr == None:
-        #         t = t - 1
-        #         continue
-        #     elif addr[:7] == G.C_102:
-        #         self.supportServer.sendTextPacket(G.C_102)
-        #         addr = addr[8:]
-        #while True:
-        addr = self.supportServer.getFirstPeer()
-        if addr == 'end':
-            time.sleep(G.waiting_time)
-            return False
-        if addr == G.NET_ADDR_self:
-            time.sleep(G.waiting_time)
-            return False
+    # def getFirstPeer(self):
+    #     ##Returns the net_addr of first peer returned by support server
+    #     # f = 0
+    #     # t = G.nOfIteration
+    #     # while f == 0 and t > 0:
+    #     #     self.supportServer.sendTextPacket(G.C_401)
+    #     #     addr = self.supportServer.recieveTextPacket()
+    #     #     if addr == None:
+    #     #         t = t - 1
+    #     #         continue
+    #     #     elif addr[:7] == G.C_102:
+    #     #         self.supportServer.sendTextPacket(G.C_102)
+    #     #         addr = addr[8:]
+    #     #while True:
+    #     addr = self.supportServer.getFirstPeer()
+    #     if addr == 'end':
+    #         time.sleep(G.waiting_time)
+    #         return False
+    #     if addr == G.NET_ADDR_self:
+    #         time.sleep(G.waiting_time)
+    #         return False
             
-        peer = p2p.Peer(addr, self.supportServer)
-        #print "First peer object made"
-        #self.supportServer.getcon(peer.net_addr)
-        if self.connect2peer(peer):
-            #print "Connected to peer"
-            return True
+    #     peer = p2p.Peer(addr, self.supportServer)
+    #     #print "First peer object made"
+    #     #self.supportServer.getcon(peer.net_addr)
+    #     if self.connect2peer(peer):
+    #         #print "Connected to peer"
+    #         return True
 
             
             
             
     def connect2peer(self, peer):
-        t = G.nOfIteration
-        f = 0
-        if (peer, 0) in self.peer_list:
+        for p in self.peer_list:
+            if p[0] == peer:
+                print "connect2peer: peer exists"
+                return True
+        self.supportServer.getcon(peer.net_addr)
+        if peer.makeConnection():
+            self.peer_list.append((peer, 0))
+            self.network.addNode(peer)
+            print "connect2peer: Connected to", peer
             return True
-        #while (not f) and t>0:
-            #self.supportServer.getcon(peer.net_addr)
-            # if peer.makeConnection():
-        #         f = 1
-        #         break
-        #     t = t - 1
-        # if f == 1:
-        self.peer_list.append((peer, 0))
-        self.network.addNode(peer)
-        return True
-        # else:
-        #     print "Failed to connect to node"
-        #     return False
-        ##Hole punches a connection to a peer, returns true or false
+        return False
 
         
     def getPeerList(self, peer):
         ##Returns a peer_list from selected peer.
-        peer.sendTextPacket(G.C_501)
-        print "getPeerList: Sent 501"
         f = 0
         t = G.nOfIteration
         while f == 0 and t > 0:
+            peer.sendTextPacket(G.C_501)
+            print "getPeerList: Sent 501"
+
             #time.slpee(0.2)
             if peer.recieveTextPacket() == G.C_502:
                 print "getPeerList: Recieved 502"
@@ -92,18 +86,18 @@ class NetworkHandler:
                 if pickledPeerList != None:
                     #print pickledPeerList
                     peer_list_u = pickle.loads(pickledPeerList)
-                    print "getPeerList: Obtained peer_addr :",peer_list_u
-                    peer_list = []
-                    for adr in peer_list_u:
-                        newPeer = (p2p.Peer(adr,self.supportServer), 0)
-                        if newPeer not in peer_list:
-                            peer_list.append( newPeer )
+                    print "getPeerList: Obtained peer_list :",peer_list_u
+                    #peer_list = []
+                    #for adr in peer_list_u:
+                    #    newPeer = (p2p.Peer(adr,self.supportServer), 0)
+                    #    if newPeer not in peer_list:
+                    #        peer_list.append( newPeer )
                     print "getPeerList: Peer list obtained"
-                    peer.sendTextPacket(G.C_102)
+                    #peer.sendTextPacket(G.C_102)
                     print "getPeerList: sent 102"
-                    f = 1
-                    print "getPeerList : peer list ", peer_list
-                    return peer_list
+                    #f = 1
+                    #print "getPeerList : peer list ", peer_list
+                    return peer_list_u
             t = t -1 
         return None
 

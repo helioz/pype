@@ -65,7 +65,7 @@ class Pype:
         self.newCallInterrupt = False
         self.notKillAll = True
         self.calleePeer = 0
-
+        self.peerThreads = []
 
         #Initialising bottom layers
         self.crypto = CryptoHandler()
@@ -76,19 +76,11 @@ class Pype:
         self.runPype()
         
     def runPype(self):
-        self.peerThreads = []
-        
         #First peer connection
         self.connectToFirstPeer()
 
-        # #Test############
-        # AVHandler(firstPeer).callAV()
-        # return
-        # #Test###########
 
-    
         #Server listener thread
-
         self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
         self.serverPollThread.start()
         
@@ -114,16 +106,19 @@ class Pype:
             for peer in peer_list:
                 #if random.choice([1,2,3]) == 3:
                 if peer[0].net_addr != GLOBALS.NET_ADDR_self and peer not in self.network.peer_list:
-                    self.network.connect2peer(peer[0])
-            self.network.peer_list
-                    
+                    self.network.supportServer.getcon(peer[0].net_addr)
+                    if self.network.connect2peer(peer[0]):
+                        self.peerThreads.append(PeerListener(self.thread_count, self.network.peer_list[self.thread_count][0], self.network.PeerListenerThread, self.callInterrupt))
+                        self.peerThreads[self.thread_count].start()                    
+                        self.thread_count = self.thread_count + 1                    
 
-            #Launching peer threads
-        while self.thread_count < len(self.network.peer_list):
-            if peer[0].net_addr != GLOBALS.NET_ADDR_self:
-                self.peerThreads.append(PeerListener(self.thread_count, self.network.peer_list[self.thread_count][0], self.network.PeerListenerThread, self.callInterrupt))
-                self.peerThreads[self.thread_count].start()
-                self.thread_count = self.thread_count + 1
+        print "runPype : peer list populated and threads running"
+        #Launching peer threads
+        # while self.thread_count < len(self.network.peer_list):
+        #     if peer[0].net_addr != GLOBALS.NET_ADDR_self:
+                
+
+
 
         
         print "runPype: getAddrBook"
@@ -156,10 +151,11 @@ class Pype:
             time.sleep(2)
             print "connectToFirstPeer : ",firstPeerAddr
             firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
-            self.network.supportServer.getcon(firstPeer.net_addr)
-            if firstPeer.makeConnection():
-                self.network.peer_list.append((firstPeer,0))
-                self.network.network.nodeList.append(firstPeer)
+            # self.network.supportServer.getcon(firstPeer.net_addr)
+            # if firstPeer.makeConnection():
+            #     self.network.peer_list.append((firstPeer,0))
+            #     self.network.network.addNode(firstPeer)
+            if self.network.connect2peer(firstPeer):
                 print "First peer connected"
                 self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread, self.callInterrupt))
                 self.peerThreads[self.thread_count].start()

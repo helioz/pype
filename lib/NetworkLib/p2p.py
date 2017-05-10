@@ -18,8 +18,6 @@ class Peer:
     def __init__(self, net_addr, supportServer):
         self.net_addr = net_addr
         ## net_addr contains session endpoints and any other details to establish connection
-        #self.tcpStream = 0 #Stream object
-        #self.symKey = sym_key
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -29,10 +27,12 @@ class Peer:
                 break
             except:
                 print "Peer init: Failed to bind port, retrying"
-
-	self.s.connect(netAlgo.stringToTuple(self.net_addr))
+        try:
+	    self.s.connect(netAlgo.stringToTuple(self.net_addr))
+        except:
+            print "Peer init: Bad address for peer."
+            
 	self.isPunched = False
-        self.s.settimeout(G.punchTimeout)
         self.supportServer = supportServer
 
     def __eq__(self, other):
@@ -43,11 +43,12 @@ class Peer:
 
     def __str__(self):
         return "Peer : "+self.net_addr
+    
     def __repr__(self):
         return "Peer Obj: "+self.net_addr
         
     def makeConnection(self):
-        ##Hole punches a connection to peer and returns true
+        ##Attempts to hole punch a connection to peer and returns true, assumes that getcon is called.
         #self.supportServer.getcon(self.net_addr)
         for i in range(G.nOfIteration) :
             #print "makeConn(): Running make connection on ", self.net_addr
@@ -61,7 +62,7 @@ class Peer:
                     time.sleep(1)
 		    continue
 	        if data == 'punch' :
-		    print 'received punch\n'
+		    #print 'received punch\n'
 		    self.sendTextPacket('punched')
 		    self.isPunched = True
 		    #self.s.settimeout(None)
@@ -135,7 +136,9 @@ class P2PNetwork:
     def pushBroadcast(self, data_bStream, ctrlString1, ctrlString2):
         for p in self.nodeList:
             p.sendTextPacket(ctrlString1)
+            print "pushBroadcast sent ",ctrlString1
             if p.recieveTextPacket() == ctrlString2:
+                print "pushBroadcast received ", ctrlString2
                 p.sendTextPacket(data_bStream)
                 print "pushBroadcast: Successfully sent to ", p.net_addr
 
@@ -154,7 +157,7 @@ class SupportServer:
                 break
             except:
                 print "supportServer: Error binding, retrying..."
-                #G.PORT_local = G.PORT_local + 10
+
         print G.name+" "+G.version_no+" running on port :",G.PORT_local
         self.s.connect((self.ip_addr, G.PORT_support_server))
 
