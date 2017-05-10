@@ -137,7 +137,7 @@ class Pype:
                         
             
 
-    def callInterrupt(control, arg):
+    def callInterrupt(self, control, arg):
         if control == 2:
             return loadContacts()
         if control == 1:
