@@ -20,7 +20,7 @@ key_size = 1024
 frame_rate = 1.0/24.0
 
 ##Network globals
-packet_maxsize = 4096
+packet_maxsize = 15000
 punchTimeout = 3
 nOfIteration = 4
 waiting_time = 3

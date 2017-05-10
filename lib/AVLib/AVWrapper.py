@@ -81,7 +81,9 @@ class AVHandler:
         
         while True:
             try:
+                print "Waiting for video"
                 avdata = self.peer.recieveMediaPacket()
+                print "AV packet recieved"
             except:
                 continue
             if avdata[0] == "V":
@@ -103,8 +105,7 @@ class AVHandler:
     def callAV(self):
         self.callEnd = False
         try:
-            threading.Thread(target = self.video_send).start()
-            
+            #threading.Thread(target = self.video_send).start()
             #threading.Thread(target = self.audio_send).start()
             threading.Thread(target = self.video_read).start()
         except:
