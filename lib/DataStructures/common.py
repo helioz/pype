@@ -137,10 +137,12 @@ class Pype:
                         
             
 
-    def callInterrupt(control, peer):
+    def callInterrupt(control, arg):
+        if control == 2:
+            return loadContacts()
         if control == 1:
             self.newCallInterrupt = True
-            self.calleePeer = peer
+            self.calleePeer = arg
 
 
     def connectToFirstPeer(self):

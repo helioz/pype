@@ -147,15 +147,15 @@ class NetworkHandler:
                 sign = self.crypto.decryptSignature(ad[1],self.crypto.toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature
                 p = self.network.getPeerByAddr(sign.net_addr)
         if p != None:
+            print p
             p.sendTextPacket(G.C_801)
             if p.recieveTextPacket() == G.C_802:
                 p.sendTextPacket(G.C_803+"-"+pub_key_hash_self)
-                if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
-                    p.sendTextPacket(G.C_102)
-                    p.recieveTextPacket()
-                    return peer
-                else:
-                    print "callPeer: Reciever unidentified"
+                #if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
+                #p.sendTextPacket(G.C_102)
+                p.recieveTextPacket()
+                return p
+            
             else:
                 print "callPeer: Call rejected"
         elif sign != None:
@@ -231,18 +231,23 @@ class NetworkHandler:
                     peer.sendTextPacket(G.C_802)
                     print "PeerListener: sent 802"
                     addr = peer.recieveTextPacket()
+                    if addr == None:
+                        addr = peer.recieveTextPacket()
+                        if addr == None:
+                            continue
                     ad1, pub_key_hash_other = addr.split("-")
                     if ad1 == G.C_803:
                         print "PeerListener: Recieved 803"
-                        for contact in contacts:
+                        for contact in callInterrupt(2,0):
                             if contact.h == pub_key_hash_other:
                                 print "PeerListener: Caller identified"
-                                peer.sendTextPacket(G.C_803+"-"+crypto.pubKeyHashSelf())
-                                print "PeerListener: Address verification sent 803"
-                                peer.recieveTextPacket()
-                                print "PeerListener: Recieved 102"
-                                peer.sendTextPacket(G.C_805)
-                                print "PeerListener: sent 805"
+                                
+                                #peer.sendTextPacket(G.C_803+"-"+crypto.pubKeyHashSelf())
+                                #print "PeerListener: Address verification sent 803"
+                                #peer.recieveTextPacket()
+                                #print "PeerListener: Recieved 102"
+                                #peer.sendTextPacket(G.C_805)
+                                #print "PeerListener: sent 805"
                                 callInterrupt(1,peer)
                                 #Call incoming call interrupt with contact, and peer
                                 f = 1
