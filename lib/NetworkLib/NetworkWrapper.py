@@ -198,7 +198,7 @@ class NetworkHandler:
                     AddrBookDelta_u = peer.recieveTextPacket()
                     if AddrBookDelta_u != None:
                         AddrBookDelta = pickle.loads(AddrBookDelta_u)
-                    self.addToAddrBook(AddrBookDelta)
+                        self.addToAddrBook(AddrBookDelta)
                     print "PeerListener: Address Book delta updated"
                     
                 elif packet == G.C_601:
