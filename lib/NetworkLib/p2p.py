@@ -20,7 +20,7 @@ class Peer:
         ## net_addr contains session endpoints and any other details to establish connection
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
+        self.s.settimeout(G.punchTimeout)
 	for p in range(G.nOfIteration):
             try:
 	        self.s.bind(('',G.PORT_local))
@@ -54,9 +54,10 @@ class Peer:
             #print "makeConn(): Running make connection on ", self.net_addr
 	    if self.sendTextPacket('punch'):
                 print "makeConn: sent punch", self.net_addr
-	        #self.s.settimeout(G.punchTimeout)
+	        self.s.settimeout(G.punchTimeout)
 	        #data = ''
 	        try :
+
 		    data = self.s.recv(G.packet_maxsize)                    
 	        except :
                     time.sleep(1)

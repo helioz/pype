@@ -103,26 +103,29 @@ class NetworkHandler:
 
     def getAddrBook(self, peer):
         ##Adds AddrBook of selected peer as current AddrBook
-        peer.sendTextPacket(G.C_601)
-        f = 0
+        
+        #f = 0
         t = 5
-        while f == 0 and t > 0:
+        while  t > 0:
+            peer.sendTextPacket(G.C_601)
             if peer.recieveTextPacket() == G.C_602:
-                peer.sendTextPacket(G.C_102)
+                #peer.sendTextPacket(G.C_102)
                 pickledAddrBook = peer.recieveTextPacket()
-                if pickledAddrBook == None:
-                    continue
-                addr_book = pickle.loads(pickledAddrBook)
-                peer.sendTextPacket(G.C_102)
-                f = 1
-                self.AddrBook = addr_book
-                return None
-            t = t -1 
-        return
+                if pickledAddrBook[0] == 'A':
+                    pickledAddrBook = pickledAddrBook[1:]
+                    if pickledAddrBook == None:
+                        continue
+                    peer.sendTextPacket(G.C_102)
+                    #addr_book 
+                    #f = 1
+                    self.AddrBook = pickle.loads(pickledAddrBook)
+                    return True
+            time.sleep(2)
+        return False
 
     def pushAddrBookDelta(self, AddrBookDelta):
         ##Broadcasts updates to AddrBook
-        self.network.pushBroadcast(pickle.dumps(AddrBookDelta), G.C_701, G.C_702)
+        self.network.pushBroadcast('D'+pickle.dumps(AddrBookDelta), G.C_701, G.C_702)
         return
     
     def callPeer(self, contact):
@@ -164,15 +167,17 @@ class NetworkHandler:
     def addToAddrBook(self, AddrBookDelta):
         f = 0
         h = self.crypto.sha256(pickle.dumps(AddrBookDelta))
-        print "addToAddrBook: ", h
+        print "addToAddrBook: hash", h
         for t in self.AddrDeltaDict:
             if t == h:
-                f = 1
-        if f == 0:
-            self.AddrBook = self.AddrBook+AddrBookDelta
-            self.AddrDeltaDict.append(h)
-            self.pushAddrBookDelta(AddrBookDelta)
-            print "addToAddrBook: updated AddrBook", self.AddrBook
+                print "addToAddrBook : hash exists"
+                return True
+            
+        self.AddrDeltaDict.append(h)    
+        self.AddrBook = self.AddrBook+AddrBookDelta
+        self.pushAddrBookDelta(AddrBookDelta)
+        print "addToAddrBook: updated AddrBook", self.AddrBook
+        return True
 
             
     def PeerListenerThread(self, peer, callInterrupt):
@@ -196,18 +201,20 @@ class NetworkHandler:
                 elif packet == G.C_701:
                     peer.sendTextPacket(G.C_702)
                     AddrBookDelta_u = peer.recieveTextPacket()
-                    if AddrBookDelta_u != None:
+                    if AddrBookDelta_u[0] == 'D':
+                        AddrBookDelta_u = AddrBookDelta_u[1:]
                         AddrBookDelta = pickle.loads(AddrBookDelta_u)
-                        print "Peer listener: AddrBookDelta ", AddrBookDelta
+                        print "Peer listener: AddrBookDelta recieved:", AddrBookDelta
                         self.addToAddrBook(AddrBookDelta)
-                    print "PeerListener: Address Book delta updated"
+                        print "PeerListener: Address Book delta updated"
                     
                 elif packet == G.C_601:
                     peer.sendTextPacket(G.C_602)
-                    if peer.recieveTextPacket() == G.C_102:
-                        peer.sendTextPacket(pickle.dumps(self.AddrBook))
+                    #if peer.recieveTextPacket() == G.C_102:
+                    peer.sendTextPacket('A'+pickle.dumps(self.AddrBook))
                     if peer.recieveTextPacket() != G.C_102:
-                        peer.sendTextPacket(pickle.dumps(self.AddrBook))
+                        peer.sendTextPacket('A'+pickle.dumps(self.AddrBook))
+                        peer.recieveTextPacket()
 
                 elif packet == G.C_801:
                     #Incoming call
