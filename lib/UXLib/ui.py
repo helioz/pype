@@ -138,7 +138,7 @@ class UI():
             self.ShowMessage("Pype","Key pair generated successfully")
             self.numKeys = self.numKeys + 1
             self.loadKeyStore.append(["Key Pair "+str(self.numKeys)])
-            AddrBookDelta = [(self.pype.crypto.pubKeyHashSelf(), self.pype.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.pype.crypto.pubKeyHashSelf(), 0)))]
+            AddrBookDelta = [(self.pype.crypto.pubKeyHashSelf(), self.pype.crypto.generateSignature(common.Signature(GLOBAL.NET_ADDR_self, self.pype.crypto.pubKeyHashSelf(), 0)))]
             self.pype.network.addToAddrBook(AddrBookDelta)
 
             #self.loadKeyCB.destroy()

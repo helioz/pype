@@ -136,6 +136,7 @@ class NetworkHandler:
         ##Obtain peer address
         pub_key_hash_other = self.crypto.pubKeyHash(contact.keyN, contact.keyE)
         pub_key_hash_self = self.crypto.pubKeyHashSelf()
+        print "Callee address ", pub_key_hash_other
         p = None
         sign = None
         for ad in self.AddrBook:
@@ -169,8 +170,9 @@ class NetworkHandler:
     def addToAddrBook(self, AddrBookDelta):
         f = 0
         h = self.crypto.sha256(pickle.dumps(AddrBookDelta))
+        print "addToAddrBook: ", h
         for t in self.AddrDeltaDict:
-            if t[0] == h:
+            if t == h:
                 f = 1
         if f == 0:
             self.AddrBook = self.AddrBook+AddrBookDelta
@@ -202,6 +204,7 @@ class NetworkHandler:
                     AddrBookDelta_u = peer.recieveTextPacket()
                     if AddrBookDelta_u != None:
                         AddrBookDelta = pickle.loads(AddrBookDelta_u)
+                        print "Peer listener: AddrBookDelta ", AddrBookDelta
                         self.addToAddrBook(AddrBookDelta)
                     print "PeerListener: Address Book delta updated"
                     

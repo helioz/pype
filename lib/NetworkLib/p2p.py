@@ -41,6 +41,11 @@ class Peer:
         else:
             return False
 
+    def __str__(self):
+        return "Peer : "+self.net_addr
+    def __repr__(self):
+        return "Peer Obj: "+self.net_addr
+        
     def makeConnection(self):
         ##Hole punches a connection to peer and returns true
         #self.supportServer.getcon(self.net_addr)
