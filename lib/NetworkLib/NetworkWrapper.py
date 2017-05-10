@@ -110,6 +110,7 @@ class NetworkHandler:
             peer.sendTextPacket(G.C_601)
             if peer.recieveTextPacket() == G.C_602:
                 #peer.sendTextPacket(G.C_102)
+                print "getAddrBook : Recieved 602"
                 pickledAddrBook = peer.recieveTextPacket()
                 if pickledAddrBook[0] == 'A':
                     pickledAddrBook = pickledAddrBook[1:]
@@ -211,11 +212,12 @@ class NetworkHandler:
                 elif packet == G.C_601:
                     peer.sendTextPacket(G.C_602)
                     #if peer.recieveTextPacket() == G.C_102:
+                    
                     peer.sendTextPacket('A'+pickle.dumps(self.AddrBook))
                     if peer.recieveTextPacket() != G.C_102:
                         peer.sendTextPacket('A'+pickle.dumps(self.AddrBook))
                         peer.recieveTextPacket()
-
+                    print "peerListener: sent AddrBook"
                 elif packet == G.C_801:
                     #Incoming call
                     f = 0

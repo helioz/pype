@@ -81,8 +81,8 @@ class Pype:
 
 
         #Server listener thread
-        self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
-        self.serverPollThread.start()
+        #self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
+        #self.serverPollThread.start()
         
         # while True:
         #     self.network.getFirstPeer()
@@ -193,8 +193,8 @@ class Pype:
                         self.peerThreads[self.thread_count].start()
                         self.thread_count = self.thread_count + 1
                         print "Server thread makes new peer thread", newPeer.net_addr
-                    else:
-                        newPeer.makeConnection()
+                    #else:
+                        #newPeer.makeConnection()
                 time.sleep(7)
 
 

@@ -195,8 +195,11 @@ class SupportServer:
         #print "Called poll"
         self.s.send(pollm)
         #print "poll sent", pollm
-        msg = self.s.recv(G.packet_maxsize)
+        try:
+            msg = self.s.recv(G.packet_maxsize)
         #print msg
+        except:
+            return None
         if msg == endm:
             return None
         duties = msg.split(separator)
