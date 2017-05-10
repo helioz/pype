@@ -133,7 +133,7 @@ class Pype:
         print "pypeRun: Initialisation Complete, starting UI"
         #Listening to all peers as threads
         
-        threading.Thread(target = self.makeCall).start()
+        #threading.Thread(target = self.makeCall).start()
 
         
             
@@ -143,7 +143,7 @@ class Pype:
             return loadContacts()
         if control == 1:
             self.newCallInterrupt = True
-            self.calleePeer = arg
+            #self.calleePeer = arg
 
     def makeCall(self):
         while True:

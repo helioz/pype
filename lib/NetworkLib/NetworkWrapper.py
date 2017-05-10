@@ -5,6 +5,7 @@ import p2p
 import Resources._globals as G
 import pickle
 import time
+from lib.AVLib.AVWrapper import AVHandler
 
 
 
@@ -226,7 +227,8 @@ class NetworkHandler:
                     print "peerListener: sent AddrBook"
                 elif packet == G.C_801:
                     print "Got call"
-                    callInterrupt(1, peer)
+                    callInterrupt(1,0)
+                    AVHandler(peer).sendAV()
                     # #Incoming call
                     # f = 0
                     # print "PeerListener: Incoming call, recieved 801"
