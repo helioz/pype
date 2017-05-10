@@ -81,8 +81,8 @@ class Pype:
 
 
         #Server listener thread
-        self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
-        self.serverPollThread.start()
+        #self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
+        #self.serverPollThread.start()
         
         # while True:
         #     self.network.getFirstPeer()
@@ -170,9 +170,9 @@ class Pype:
 
     def serverPollThreadFunc(self):
         #time.sleep(random.choice(range(5)))
-        time.sleep(50)
+        time.sleep(10)
         while True and self.notKillAll:
-            time.sleep(50)
+            time.sleep(20)
             while self.newCallInterrupt:  #Disable thread during call
                 time.sleep(10)
             

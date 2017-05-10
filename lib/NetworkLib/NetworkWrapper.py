@@ -206,6 +206,8 @@ class NetworkHandler:
                 elif packet == G.C_701:
                     peer.sendTextPacket(G.C_702)
                     AddrBookDelta_u = peer.recieveTextPacket()
+                    if AddrBookDelta_u == None:
+                        continue
                     if AddrBookDelta_u[0] == 'D':
                         AddrBookDelta_u = AddrBookDelta_u[1:]
                         AddrBookDelta = pickle.loads(AddrBookDelta_u)

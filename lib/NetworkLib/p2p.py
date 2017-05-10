@@ -151,7 +151,7 @@ class SupportServer:
         self.ip_addr = G.IPADDR_support_server
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.s.settimeout(G.punchTimeout)
+        self.s.settimeout(None)
         for p in range(G.nOfIteration):
             try:
 	        self.s.bind(('',G.PORT_local))
