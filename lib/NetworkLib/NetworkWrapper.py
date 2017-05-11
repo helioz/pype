@@ -202,7 +202,11 @@ class NetworkHandler:
         #if not peer.makeConnection():
         #    return
         try:
-            while True and self.notCallFlag:
+            while True:
+                if not self.notCallFlag:
+                    time.sleep(5)
+                    continue
+                print "PeerListener : running"
                 #peer.makeConnection()
                 packet = peer.recieveTextPacket()
                 #print "Recieved",packet
@@ -242,13 +246,15 @@ class NetworkHandler:
                     #callInterrupt(1,0)
                     self.notCallFlag = False
                     try:
-                        proc = multiprocessing.Process(target=AVHandler(p).callAV())
-                        proc.start()
-                        proc.join()
+                        # proc = multiprocessing.Process(target=AVHandler(p).callAV())
+                        # proc.start()
+                        # proc.join()
+                        AVHandler(p).callAV()
                         print "Call ended"
                         self.notCallFlag = True
                         #AVHandler(peer).callAV()
                     except:
+                        print "Call exception"
                         self.notCallFlag = True
                         #pass
                     # #Incoming call
