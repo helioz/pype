@@ -60,7 +60,7 @@ class NetworkHandler:
         for p in self.peer_list:
             if p[0].net_addr == peer_addr:
                 print "connect2peer: peer exists"
-                return False  ##If changed to True, fix peerListener and peer connecter threads
+                return False, p  ##If changed to True, fix peerListener and peer connecter threads
         self.supportServer.getcon(peer_addr)
         peer = p2p.Peer(peer_addr, self.supportServer)
         if peer.makeConnection():
@@ -68,7 +68,7 @@ class NetworkHandler:
             self.network.addNode(peer)
             print "connect2peer: Connected to", peer
             return True, peer
-        return False
+        return False, None
 
         
     def getPeerList(self, peer):
@@ -199,7 +199,7 @@ class NetworkHandler:
                 if packet == G.C_501:
                     print "PeerListener: Recieved 501"
                     peer.sendTextPacket(G.C_502)
-                    print "PeerListener: Peer list to send", self.peer_list
+                    #print "PeerListener: Peer list to send", self.peer_list
                     pl = []
                     for it in self.peer_list:
                        pl.append(it[0].net_addr)
