@@ -21,7 +21,7 @@ class NetworkHandler:
         G.NET_ADDR_self = self.supportServer.getAddress()
         print "pype running at IP: ",G.NET_ADDR_self
         #self.numPeers = 0
-
+        self.notCallFlag = True
 
         
     # def getFirstPeer(self):
@@ -156,13 +156,15 @@ class NetworkHandler:
                 #if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
                 #p.sendTextPacket(G.C_102)
                 #p.recieveTextPacket()
+            self.notCallFlag = False
             try:
 
                 proc = multiprocessing.Process(target=AVHandler(p).callAV())
                 proc.start()
                 proc.join()
-                
+                self.notCallFlag = True
             except:
+                self.notCallFlag = True
                 pass
                 
         #     else:
@@ -199,7 +201,7 @@ class NetworkHandler:
         #if not peer.makeConnection():
         #    return
         try:
-            while True:
+            while True and self.notCallFlag:
                 #peer.makeConnection()
                 packet = peer.recieveTextPacket()
                 #print "Recieved",packet
@@ -237,14 +239,17 @@ class NetworkHandler:
                 elif packet == G.C_801:
                     print "Got call"
                     #callInterrupt(1,0)
+                    self.notCallFlag = False
                     try:
                         proc = multiprocessing.Process(target=AVHandler(p).callAV())
                         proc.start()
                         proc.join()
-
+                        print "Call ended"
+                        self.notCallFlag = True
                         #AVHandler(peer).callAV()
                     except:
-                        pass
+                        self.notCallFlag = True
+                        #pass
                     # #Incoming call
                     # f = 0
                     # print "PeerListener: Incoming call, recieved 801"
