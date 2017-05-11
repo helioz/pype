@@ -81,8 +81,8 @@ class Pype:
 
 
         #Server listener thread
-        #self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
-        #self.serverPollThread.start()
+        self.serverPollThread = ServerPollThread(self.serverPollThreadFunc)
+        self.serverPollThread.start()
         
         # while True:
         #     self.network.getFirstPeer()
@@ -162,12 +162,13 @@ class Pype:
                 continue
             time.sleep(2)
             print "connectToFirstPeer : ",firstPeerAddr
-            firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
+            #firstPeer = p2p.Peer(firstPeerAddr, self.network.supportServer)
             # self.network.supportServer.getcon(firstPeer.net_addr)
             # if firstPeer.makeConnection():
             #     self.network.peer_list.append((firstPeer,0))
             #     self.network.network.addNode(firstPeer)
-            if self.network.connect2peer(firstPeer):
+            ret, firstPeer = self.network.connect2peer(firstPeerAddr)
+            if ret:
                 print "First peer connected"
                 self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread, self.callInterrupt))
                 self.peerThreads[self.thread_count].start()
@@ -194,9 +195,9 @@ class Pype:
                     if not (adr in connListNoDup):
                         connListNoDup.append(adr)
                 for adr in connListNoDup:
-                    
-                    if self.network.connect2peer(adr):
-                        newPeer = p2p.Peer(adr, self.network.supportServer)
+                    ret, newPeer = self.network.connect2peer(adr)
+                    if ret:
+                        #newPeer = p2p.Peer(adr, self.network.supportServer)
                         self.peerThreads.append(PeerListener(self.thread_count, newPeer, self.network.PeerListenerThread, self.callInterrupt))
                         self.peerThreads[self.thread_count].start()
                         self.thread_count = self.thread_count + 1

@@ -62,12 +62,12 @@ class NetworkHandler:
                 print "connect2peer: peer exists"
                 return False  ##If changed to True, fix peerListener and peer connecter threads
         self.supportServer.getcon(peer_addr)
-        peer = p2p.Peer(peer_addr. self.supportServer)
+        peer = p2p.Peer(peer_addr, self.supportServer)
         if peer.makeConnection():
             self.peer_list.append((peer, 0))
             self.network.addNode(peer)
             print "connect2peer: Connected to", peer
-            return True
+            return True, peer
         return False
 
         
@@ -164,7 +164,8 @@ class NetworkHandler:
             print "callPeer: Address not a peer. Trying to establish connection"
             #peer = p2p.Peer(sign.net_addr,0)
             self.supportServer.getcon(sign.net_addr)
-            if self.connect2peer(sign.net_addr):
+            ret, peer = self.connect2peer(sign.net_addr)
+            if ret:
             #if peer.makeConnection():
                 return self.callPeer(contact)
         else:
