@@ -162,10 +162,11 @@ class NetworkHandler:
                 proc = multiprocessing.Process(target=AVHandler(p).callAV())
                 proc.start()
                 proc.join()
+                print "Call ended"
                 self.notCallFlag = True
             except:
                 self.notCallFlag = True
-                pass
+                #pass
                 
         #     else:
         #         print "callPeer: Call rejected"
