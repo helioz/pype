@@ -181,7 +181,7 @@ class Pype:
 
     def serverPollThreadFunc(self):
         #time.sleep(random.choice(range(5)))
-        time.sleep(10)
+        time.sleep(5)
         while True and self.notKillAll:
             time.sleep(20)
             #while self.newCallInterrupt:  #Disable thread during call

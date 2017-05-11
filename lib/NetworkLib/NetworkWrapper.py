@@ -6,7 +6,7 @@ import Resources._globals as G
 import pickle
 import time
 from lib.AVLib.AVWrapper import AVHandler
-
+import multiprocessing
 
 
 class NetworkHandler:
@@ -156,8 +156,15 @@ class NetworkHandler:
                 #if p.recieveTextPacket() == G.C_803+"-"+pub_key_hash_other:
                 #p.sendTextPacket(G.C_102)
                 #p.recieveTextPacket()
-            AVHandler(p).callAV()
-            
+            try:
+
+                proc = multiprocessing.Process(target=AVHandler(p).callAV())
+                proc.start()
+                proc.join()
+                
+            except:
+                pass
+                
         #     else:
         #         print "callPeer: Call rejected"
         elif sign != None:
@@ -230,7 +237,14 @@ class NetworkHandler:
                 elif packet == G.C_801:
                     print "Got call"
                     #callInterrupt(1,0)
-                    AVHandler(peer).callAV()
+                    try:
+                        proc = multiprocessing.Process(target=AVHandler(p).callAV())
+                        proc.start()
+                        proc.join()
+
+                        #AVHandler(peer).callAV()
+                    except:
+                        pass
                     # #Incoming call
                     # f = 0
                     # print "PeerListener: Incoming call, recieved 801"
