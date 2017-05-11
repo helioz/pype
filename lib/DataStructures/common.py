@@ -188,7 +188,7 @@ class Pype:
             #    time.sleep(10)
             
             connList = self.network.supportServer.poll()
-            print "Poll thread running"
+            #print "Poll thread running"
             if connList != None:
                 connListNoDup = []
                 for adr in connList:

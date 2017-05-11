@@ -206,7 +206,7 @@ class NetworkHandler:
                 if not self.notCallFlag:
                     time.sleep(5)
                     continue
-                print "PeerListener : running"
+                #print "PeerListener : running"
                 #peer.makeConnection()
                 packet = peer.recieveTextPacket()
                 #print "Recieved",packet
