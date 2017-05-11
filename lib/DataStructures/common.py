@@ -181,8 +181,8 @@ class Pype:
         time.sleep(10)
         while True and self.notKillAll:
             time.sleep(20)
-            while self.newCallInterrupt:  #Disable thread during call
-                time.sleep(10)
+            #while self.newCallInterrupt:  #Disable thread during call
+            #    time.sleep(10)
             
             connList = self.network.supportServer.poll()
             print "Poll thread running"
@@ -194,12 +194,13 @@ class Pype:
                     if not (adr in connListNoDup):
                         connListNoDup.append(adr)
                 for adr in connListNoDup:
-                    newPeer = p2p.Peer(adr, self.network.supportServer)
-                    if self.network.connect2peer(newPeer):
+                    
+                    if self.network.connect2peer(adr):
+                        newPeer = p2p.Peer(adr, self.network.supportServer)
                         self.peerThreads.append(PeerListener(self.thread_count, newPeer, self.network.PeerListenerThread, self.callInterrupt))
                         self.peerThreads[self.thread_count].start()
                         self.thread_count = self.thread_count + 1
-                        print "Server thread makes new peer thread", newPeer.net_addr
+                        print "Server thread makes new peer thread", newPeer
                     #else:
                         #newPeer.makeConnection()
         

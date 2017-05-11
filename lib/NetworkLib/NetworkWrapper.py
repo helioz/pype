@@ -56,12 +56,13 @@ class NetworkHandler:
             
             
             
-    def connect2peer(self, peer):
+    def connect2peer(self, peer_addr):
         for p in self.peer_list:
-            if p[0] == peer:
+            if p[0].net_addr == peer_addr:
                 print "connect2peer: peer exists"
                 return False  ##If changed to True, fix peerListener and peer connecter threads
-        self.supportServer.getcon(peer.net_addr)
+        self.supportServer.getcon(peer_addr)
+        peer = p2p.Peer(peer_addr. self.supportServer)
         if peer.makeConnection():
             self.peer_list.append((peer, 0))
             self.network.addNode(peer)
@@ -86,10 +87,10 @@ class NetworkHandler:
                     pickledPeerList = pickledPeerList[1:]
                     #print pickledPeerList
                     peer_list_u = pickle.loads(pickledPeerList)
-                    peerList = []
-                    for peerAddr in peer_list_u:
-                        peerList.append( ( p2p.Peer(peerAddr, self.supportServer), 0 ) )
-                    print "getPeerList: Obtained peer_list :", peerList
+                    #peerList = []
+                    #for peerAddr in peer_list_u:
+                    #    peerList.append( ( p2p.Peer(peerAddr, self.supportServer), 0 ) )
+                    #print "getPeerList: Obtained peer_list :", peerList
                     #peer_list = []
                     #for adr in peer_list_u:
                     #    newPeer = (p2p.Peer(adr,self.supportServer), 0)
@@ -100,7 +101,7 @@ class NetworkHandler:
                     #print "getPeerList: sent 102"
                     #f = 1
                     #print "getPeerList : peer list ", peer_list
-                    return peerList
+                    return peer_list_u
             t = t -1 
         return None
 
@@ -159,16 +160,16 @@ class NetworkHandler:
             
         #     else:
         #         print "callPeer: Call rejected"
-        # elif sign != None:
-        #     print "callPeer: Address not a peer. Trying to establish connection"
-        #     peer = p2p.Peer(sign.net_addr,0)
-        #     self.supportServer.getcon(peer.net_addr)
-        #     if peer.makeConnection():
-                
-        #         return self.callPeer(contact)
-        # else:
-        #     print "Peer does not exist"
-        #     return None
+        elif sign != None:
+            print "callPeer: Address not a peer. Trying to establish connection"
+            #peer = p2p.Peer(sign.net_addr,0)
+            self.supportServer.getcon(sign.net_addr)
+            if self.connect2peer(sign.net_addr):
+            #if peer.makeConnection():
+                return self.callPeer(contact)
+        else:
+            print "Peer does not exist"
+            return None
 
     def addToAddrBook(self, AddrBookDelta):
         f = 0
@@ -197,7 +198,7 @@ class NetworkHandler:
                 if packet == G.C_501:
                     print "PeerListener: Recieved 501"
                     peer.sendTextPacket(G.C_502)
-                    #print "PeerListener: Peer list to send", self.peer_list
+                    print "PeerListener: Peer list to send", self.peer_list
                     pl = []
                     for it in self.peer_list:
                        pl.append(it[0].net_addr)
@@ -227,7 +228,7 @@ class NetworkHandler:
                     print "peerListener: sent AddrBook"
                 elif packet == G.C_801:
                     print "Got call"
-                    callInterrupt(1,0)
+                    #callInterrupt(1,0)
                     AVHandler(peer).callAV()
                     # #Incoming call
                     # f = 0
