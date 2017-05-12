@@ -105,7 +105,7 @@ class Pype:
 
         self.killFlag = False
 
-        self.runPype()
+        #self.runPype()
         
 
 

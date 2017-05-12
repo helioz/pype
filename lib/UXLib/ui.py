@@ -1,4 +1,5 @@
 import gi
+#import gobject
 import Resources._globals as GLOBAL
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -83,16 +84,18 @@ class UI():
         
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
 
-        threading.Thread(target = self.checkCallThreadFunc).start()
-        
+        #threading.Thread(target = self.checkCallThreadFunc).start()
+        self.checkCallSrcID = gi.repository.GObject.timeout_add(100, self.checkCallThreadFunc)
 
         self.HomeScreen.show_all()
-        #self.pype.runPype()
-        Gtk.main()
 
+        self.pype.runPype()
+        Gtk.main()
+        
 
     def on_delete_event(self, *args):
         self.pype.killFlag = True
+        gi.repository.GObject.source_remove(self.checkCallSrcID)
         Gtk.main_quit(*args)
 
         
