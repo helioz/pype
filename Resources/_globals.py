@@ -37,6 +37,7 @@ waiting_time = 3
 ack = "ack"
 
 call_req = "call_req"
+call_ready = "call_ready"
 call_reject = "call_reject"
 
 peer_list_req = "peer_list_req"

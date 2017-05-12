@@ -189,6 +189,8 @@ class NetworkHandler:
                     print "Got call"
                     peer.sendTextPacket(G.ack)
                     packet = peer.recieveTextPacket()
+                    if packet == None:
+                        continue
                     if packet[:4] == 'Call':
                         packet = packet[4:]
                         hash_addr_other, k = packet.split(G.separator)
