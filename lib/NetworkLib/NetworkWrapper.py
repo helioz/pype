@@ -166,7 +166,7 @@ class NetworkHandler:
                 if packet == G.peer_list_req:
                     pl = []
                     for it in self.peer_list:
-                       pl.append(it[0].net_addr)
+                       pl.append(it.net_addr)
                     print "PeerListener: Peer list to send", pl
                     peer.sendTextPacket('P'+pickle.dumps(pl))
 

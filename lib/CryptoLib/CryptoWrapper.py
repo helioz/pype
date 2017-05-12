@@ -52,7 +52,7 @@ class CryptoHandler:
         return h
 
     def simpleHash(self, inp_string):
-        return self.sha256(inp_string)[:G.hash_size]
+        return self.sha256(inp_string)[:GLOBALS.hash_size]
 
     def generateSignature(self, signatureP):
         ##Encrypts signatureC plaintext string with current private key
