@@ -22,7 +22,7 @@ class NetworkHandler:
 
 
         self.callFlag = False
-        self.incomingCallInterrupt = (False, False, 0)
+        self.incomingCallInterrupt = [False, False, 0]
         self.killFlag = False
 
         
@@ -31,11 +31,11 @@ class NetworkHandler:
             peer = self.incomingCallInterrupt[2]
             if self.incomingCallInterrupt[1] == False:
                 peer.sendTextPacket(G.call_reject)
-                self.incomingCallInterrupt(False, False, 0)
+                self.incomingCallInterrupt = [False, False, 0]
                 return
             peer.sendTextPacket(G.call_ready)
             self.callFlag = True
-            self.incomingCallInterrupt = (False, False, 0)
+            self.incomingCallInterrupt = [False, False, 0]
             #makeCallFunc
             self.callFlag = False
 
@@ -194,7 +194,7 @@ class NetworkHandler:
                     if packet[:4] == 'Call':
                         packet = packet[4:]
                         hash_addr_other, k = packet.split(G.separator)
-                        self.incomingCallInterrupt = (True, hash_addr_other, peer)
+                        self.incomingCallInterrupt = [True, hash_addr_other, peer]
 
                                         
         except KeyboardInterrupt:
