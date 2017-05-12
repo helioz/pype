@@ -59,7 +59,7 @@ class Pype:
         self.network = NetworkHandler(self.crypto)
         
         self.peerThreads = []
-
+        self.thread_count = 0
 
         self.killFlag = False
 
@@ -136,7 +136,7 @@ class Pype:
             ret, firstPeer = self.network.connect2peer(firstPeerAddr)
             if ret:  ##Why not implement the peer thread within the peer object?
                 print "First peer connected"
-                self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread, self.callInterrupt))
+                self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread))
                 self.peerThreads[self.thread_count].start()
                 self.thread_count = self.thread_count + 1
                 print "First peer thread started. Success"
