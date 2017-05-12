@@ -113,7 +113,7 @@ class Peer:
 		return self.recieveTextPacket()
 	except:
             print "receiveTextPacket failed"
-	    return False
+	    return None
                   
 
 

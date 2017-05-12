@@ -81,7 +81,7 @@ class Pype:
 
         print "runPype: list population"
         for p in self.network.peer_list:
-            peer_list = self.network.getPeerList(p[0])
+            peer_list = self.network.getPeerList(p)
             if peer_list == None:
                 continue
             
@@ -103,7 +103,7 @@ class Pype:
 
         
         print "runPype: getAddrBook"
-        self.network.getAddrBook(self.network.peer_list[0][0])
+        self.network.getAddrBook(self.network.peer_list[0])
         AddrBookDelta = [(self.crypto.pubKeyHashSelf(), self.crypto.generateSignature(Signature(GLOBALS.NET_ADDR_self, self.crypto.pubKeyHashSelf(), 0)))]
         time.sleep(random.choice(range(3)))
         self.network.addToAddrBook(AddrBookDelta)
