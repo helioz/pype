@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: reprot.aux
+The style file: ieeetr.bst
+Database file #1: helpers/bibliography.bib
+Warning--empty journal in nat
+Warning--empty journal in nakomoto
+You've used 2 entries,
+            1876 wiz_defined-function locations,
+            485 strings with 3672 characters,
+and the built_in function-call counts, 282 in all, are:
+= -- 20
+> -- 8
+< -- 0
++ -- 4
+- -- 2
+* -- 16
+:= -- 53
+add.period$ -- 2
+call.type$ -- 2
+change.case$ -- 2
+chr.to.int$ -- 0
+cite$ -- 4
+duplicate$ -- 18
+empty$ -- 35
+format.name$ -- 2
+if$ -- 61
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 2
+newline$ -- 9
+num.names$ -- 2
+pop$ -- 12
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 2
+stack$ -- 0
+substring$ -- 0
+swap$ -- 0
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 2
+width$ -- 3
+write$ -- 16
+(There were 2 warnings)

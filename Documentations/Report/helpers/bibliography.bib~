@@ -1,0 +1,12 @@
+@article{nat,
+	title = {Peer-to-Peer Communication Across Network Address Translators},
+	author = {Pyda Srisuresh, Bryan Ford, Dan Kegel},
+	%year = {2013},
+	%month = {Dec}
+},
+@article{nakomoto,
+  title = {Bitcoin: A Peer-to-Peer Electronic Cash System},
+  author = {Satoshi Nakamoto}
+  howpublished = {www.bitcoin.org},
+  year = {2006},
+}

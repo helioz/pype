@@ -51,6 +51,9 @@ class CryptoHandler:
         h = b64.b64encode(h.hexdigest())
         return h
 
+    def simpleHash(self, inp_string):
+        return self.sha256(inp_string)[:G.hash_size]
+
     def generateSignature(self, signatureP):
         ##Encrypts signatureC plaintext string with current private key
         
@@ -96,7 +99,7 @@ class CryptoHandler:
         pub_key = rsaKey.PublicKey(keyN, keyE)
         return pub_key
     def pubKeyHash(self, keyN, keyE):
-        return self.sha256(str(keyN)+str(keyE))  #Returns hash address
+        return self.simpleHash(str(keyN)+str(keyE))  #Returns hash address
     def pubKeyHashSelf(self):
         return self.pubKeyHash(self.public_key().n, self.public_key().e)
         

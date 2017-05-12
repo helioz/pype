@@ -6,12 +6,7 @@ import lib.DataStructures.common as common
 from lib.AVLib.AVWrapper import AVHandler
 import threading
 import time
-
-class Handler:
-    def onDeleteWindow(self, *args):
-        Gtk.main_quit(*args)
-
-
+ 
         
 
 class UI():
@@ -20,11 +15,17 @@ class UI():
         self.builder.add_from_file("lib/UXLib/ui.glade")
         self.pype = core
         
-        self.builder.connect_signals(Handler())
 
+
+
+        
         self.HomeScreen = self.builder.get_object("HomeScreen")
+        self.HomeScreen.connect('delete-event', self.on_delete_event)
+        
         self.AddContactScreen = self.builder.get_object("AddContactScreen")
+
         self.CallingScreen = self.builder.get_object("CallingScreen")
+        self.callerID = self.builder.get_object("callerID")
         self.IncomingCallScreen = self.builder.get_object("IncomingCallScreen")
         self.ErrorWindow = self.builder.get_object("ErrorWindow")
 
@@ -65,6 +66,8 @@ class UI():
         self.loadKeyCB.connect("changed", self.setKeyCBHandler)
         self.fillkeyCB()
 
+
+        
         self.makeCallButton = self.builder.get_object("button1")
         self.makeCallButton.connect("clicked", self.makeCallFunc)
         
@@ -82,13 +85,17 @@ class UI():
 
         threading.Thread(target = self.checkCallThreadFunc).start()
         
-        #AddContactScreen.show_all()
-        #CallingScreen.show_all()
-        #IncomingCallScreen.show_all()
+
         self.HomeScreen.show_all()
         #self.pype.runPype()
         Gtk.main()
 
+
+    def on_delete_event(self, *args):
+        self.pype.killFlag = True
+        Gtk.main_quit(*args)
+
+        
     def copyPbKeyFunc(self, button):
         with open(GLOBAL.nameCard, "wb") as fp:
             fp.write("keyE : "+str(self.pype.crypto.public_key().e)+"\n")
@@ -102,21 +109,34 @@ class UI():
         self.pype.network.callPeer(contacts[ind])
         
     def checkCallThreadFunc(self):
-        while self.pype.notKillAll:
+        while True:
+            if self.pype.killFlag:
+                return
+            if self.pype.network.callFlag:
+                time.sleep(15)
+                continue
             time.sleep(2)
-            if self.pype.newCallInterrupt:
-                self.callAnswerScreen.show_all()
+            if self.pype.network.incomingCallInterrupt[0]:
+                contacts = loadContacts()
+                for contact in contacts:
+                    if self.network.incomingCallInterrupt[1] == contact.h:
+                        self.callerID.set_label(contact.name)
+                        self.IncomingCallScreen.show_all()
+                self.pype.network.incomingCallInterrupt[1] = False
+                self.pype.network.answerIncomingCall()
         return
     
     def callAnswerFunc(self, button):
-        AVHandler(self.pype.calleePeer).callAV()
-        self.pype.newCallInterrupt = False
-        self.callAnswerScreen.hide()
+        self.pype.network.incomingCallInterrupt[1] = True
+        self.IncomingCallScreen.hide()
+        self.pype.network.answerIncomingCall()
         return
+    
     def callRejectFunc(self, button):
-        AVHandler(self.pype.calleePeer).rejectAV()
-        self.pype.newCallInterrupt = False
-        self.callAnswerScreen.hide()
+        self.pype.network.incomingCallInterrupt[1] = False
+        self.IncomingCallScreen.hide()
+        self.pype.network.answerIncomingCall()
+        #self.callAnswerScreen.hide()
         return
         
     def fillContactCBox(self):
