@@ -85,17 +85,18 @@ class UI():
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
 
         #threading.Thread(target = self.checkCallThreadFunc).start()
-        self.checkCallSrcID = gi.repository.GObject.timeout_add(100, self.checkCallThreadFunc)
+        self.checkCallSrcID = gi.repository.GObject.timeout_add(1000, self.checkCallThreadFunc)
 
         self.HomeScreen.show_all()
 
+        
         self.pype.runPype()
         Gtk.main()
         
 
     def on_delete_event(self, *args):
         self.pype.killFlag = True
-        gi.repository.GObject.source_remove(self.checkCallSrcID)
+        #gi.repository.GObject.source_remove(self.checkCallSrcID)
         Gtk.main_quit(*args)
 
         
@@ -112,23 +113,23 @@ class UI():
         self.pype.network.callPeer(contacts[ind])
         
     def checkCallThreadFunc(self):
-        while True:
-            if self.pype.killFlag:
-                return
-            if self.pype.network.callFlag:
-                time.sleep(15)
-                continue
-            time.sleep(1)
-            if self.pype.network.incomingCallInterrupt[0]:
-                contacts = common.loadContacts()
-                for contact in contacts:
-                    if self.pype.network.incomingCallInterrupt[1] == contact.h:
-                        self.callerID.set_label(contact.name)
-                        self.IncomingCallScreen.show_all()
-                        time.sleep(30)
+        #print "Called"
+        if self.pype.killFlag:
+            return False
+        if self.pype.network.callFlag:
+            time.sleep(15)
+        if self.pype.network.incomingCallInterrupt[0]:
+            contacts = common.loadContacts()
+            for contact in contacts:
+                if self.pype.network.incomingCallInterrupt[1] == contact.h:
+                    self.callerID.set_label(contact.name)
+                    self.IncomingCallScreen.show_all()
+                    #time.sleep(30)
                 self.pype.network.incomingCallInterrupt[1] = False
                 self.pype.network.answerIncomingCall()
-        return
+        #print "Finished"
+        return True
+                
     
     def callAnswerFunc(self, button):
         self.pype.network.incomingCallInterrupt[1] = True
