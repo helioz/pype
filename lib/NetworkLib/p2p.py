@@ -112,7 +112,7 @@ class Peer:
 	    else :
 		return self.recieveTextPacket()
 	except:
-            print "receiveTextPacket failed"
+            #print "receiveTextPacket failed"
 	    return None
                   
 

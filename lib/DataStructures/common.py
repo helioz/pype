@@ -40,7 +40,7 @@ class ServerPollThread(threading.Thread):
 class Signature:
     def __init__(self, net_addr, hash_addr, meta_data):
         self.net_addr = net_addr
-        self.hash_addr = hash_addr
+        #self.hash_addr = hash_addr
         #self.meta_data = meta_data
 
 

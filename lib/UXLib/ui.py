@@ -115,7 +115,7 @@ class UI():
             if self.pype.network.callFlag:
                 time.sleep(15)
                 continue
-            time.sleep(2)
+            time.sleep(1)
             if self.pype.network.incomingCallInterrupt[0]:
                 contacts = loadContacts()
                 for contact in contacts:

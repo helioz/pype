@@ -105,11 +105,11 @@ class NetworkHandler:
     def callPeer(self, contact):
         hash_addr_other = self.crypto.pubKeyHash(contact.keyN, contact.keyE)
         hash_addr_self = self.crypto.pubKeyHashSelf()
-        print "Callee address ", pub_key_hash_other
+        print "Callee address ", hash_addr_other
         peer = None
         sign = None
         for ad in self.AddrBook:
-            if ad[0] == pub_key_hash_other:
+            if ad[0] == hash_addr_other:
                 print "callPeer: Address found in AddrBook"
                 sign = self.crypto.decryptSignature(ad[1],self.crypto.toPubKey(contact.keyE, contact.keyN)) # sign is decrypted signature
                 peer = self.getPeerByAddr(sign.net_addr)
@@ -192,12 +192,8 @@ class NetworkHandler:
                     if packet[:4] == 'Call':
                         packet = packet[4:]
                         hash_addr_other, k = packet.split(G.separator)
-                        for contact in self.contacts:
-                            if contact.h == hash_addr_other:
-                                print "peer listener: got call"
-                                self.incomingCallInterrupt = (True, contact, peer)
-                                pass #Implement answer call mechanism
-                        peer.sendTextPacket(G.call_reject)
+                        self.incomingCallInterrupt = (True, hash_addr_other, peer)
+
                                         
         except KeyboardInterrupt:
             print "Keyboard interrupted"
