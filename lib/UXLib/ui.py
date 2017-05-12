@@ -117,11 +117,12 @@ class UI():
                 continue
             time.sleep(1)
             if self.pype.network.incomingCallInterrupt[0]:
-                contacts = loadContacts()
+                contacts = common.loadContacts()
                 for contact in contacts:
-                    if self.network.incomingCallInterrupt[1] == contact.h:
+                    if self.pype.network.incomingCallInterrupt[1] == contact.h:
                         self.callerID.set_label(contact.name)
                         self.IncomingCallScreen.show_all()
+                        time.sleep(30)
                 self.pype.network.incomingCallInterrupt[1] = False
                 self.pype.network.answerIncomingCall()
         return
