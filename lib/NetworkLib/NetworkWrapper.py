@@ -22,7 +22,7 @@ class NetworkHandler:
 
 
         self.callFlag = False
-        self.incomingCallInterrupt = [True, False, 0]
+        self.incomingCallInterrupt = [False, False, 0]
         self.killFlag = False
 
         

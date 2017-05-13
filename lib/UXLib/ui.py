@@ -129,8 +129,9 @@ class UI():
                     self.IncomingCallScreen.show_all()
                     print "closing incoming call screen"
                     #time.sleep(30)
-                self.pype.network.incomingCallInterrupt[1] = False
-                self.pype.network.answerIncomingCall()
+            print "Address not found"
+            self.pype.network.incomingCallInterrupt[1] = False
+            self.pype.network.answerIncomingCall()
         #print "Finished"
         return True
                 
