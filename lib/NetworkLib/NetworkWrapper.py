@@ -147,7 +147,7 @@ class NetworkHandler:
         self.AddrDeltaDict.append(h)    
         self.AddrBook = self.AddrBook+AddrBookDelta
         self.pushAddrBookDelta(AddrBookDelta)
-        print "addToAddrBook: updated AddrBook", self.AddrBook
+        #print "addToAddrBook: updated AddrBook", self.AddrBook
         return True
 
             

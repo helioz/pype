@@ -96,7 +96,7 @@ class UI():
 
     def on_delete_event(self, *args):
         self.pype.killFlag = True
-        #gi.repository.GObject.source_remove(self.checkCallSrcID)
+        gi.repository.GObject.source_remove(self.checkCallSrcID)
         Gtk.main_quit(*args)
 
         
@@ -113,25 +113,29 @@ class UI():
         self.pype.network.callPeer(contacts[ind])
         
     def checkCallThreadFunc(self):
-        print "Called"
+        #print "Called"
         if self.pype.killFlag:
             return False
         if self.pype.network.callFlag:
+            print "checkCallThread: Call flag wait"
             time.sleep(15)
-        print "Checking interrupt", self.pype.network.incomingCallInterrupt[0]
+        #print "Checking interrupt", self.pype.network.incomingCallInterrupt[0]
         if self.pype.network.incomingCallInterrupt[0]:
+            f = 0
             print "checking contacts"
             contacts = common.loadContacts()
             for contact in contacts:
                 if self.pype.network.incomingCallInterrupt[1] == contact.h:
+                    f = 1
                     self.callerID.set_label(contact.name)
                     print "showing incoming call screen"
                     self.IncomingCallScreen.show_all()
                     print "closing incoming call screen"
-                    #time.sleep(30)
-            print "Address not found"
-            self.pype.network.incomingCallInterrupt[1] = False
-            self.pype.network.answerIncomingCall()
+                    time.sleep(30)
+            if not f:
+                print "Address not found"
+                self.pype.network.incomingCallInterrupt[1] = False
+                self.pype.network.answerIncomingCall()
         #print "Finished"
         return True
                 
