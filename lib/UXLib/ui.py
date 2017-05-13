@@ -41,6 +41,8 @@ class UI():
         self.AddContactWindowLaunchButton = self.builder.get_object("AddContact")
         self.AddContactWindowLaunchButton.connect("clicked", self.LaunchWindow, self.AddContactScreen)
         self.numOfContacts = 1
+        self.f = 0
+
         
         self.contactCBox = self.builder.get_object("contactsCBox")
         self.contactStore = Gtk.ListStore(str)
@@ -49,6 +51,7 @@ class UI():
         self.contactCBox.add_attribute(self.contactCell, 'text', 0)
         self.contactCBox.set_model(self.contactStore)
         self.contactCBox.connect('changed', self.on_chaned)
+        self.contacts = common.loadContacts()
         self.fillContactCBox()
         
         self.dialogOK = self.builder.get_object("button2")
@@ -85,7 +88,8 @@ class UI():
         self.HomeScreen.set_title(GLOBAL.name+" "+GLOBAL.version_no)
 
         #threading.Thread(target = self.checkCallThreadFunc).start()
-        self.checkCallSrcID = gi.repository.GObject.timeout_add(1000, self.checkCallThreadFunc)
+        #self.checkCallSrcID = gi.repository.GObject.timeout_add(1000, self.checkCallThreadFunc)
+        self.checkCallSrcID = gi.repository.GObject.idle_add(self.checkCallThreadFunc)
 
         self.HomeScreen.show_all()
 
@@ -121,18 +125,19 @@ class UI():
             time.sleep(15)
         #print "Checking interrupt", self.pype.network.incomingCallInterrupt[0]
         if self.pype.network.incomingCallInterrupt[0]:
-            f = 0
+            #self.f = 0
             print "checking contacts"
-            contacts = common.loadContacts()
-            for contact in contacts:
+            for contact in self.contacts:
+                if self.f:
+                    break
                 if self.pype.network.incomingCallInterrupt[1] == contact.h:
-                    f = 1
+                    self.f = 1
                     self.callerID.set_label(contact.name)
                     print "showing incoming call screen"
                     self.IncomingCallScreen.show_all()
                     print "closing incoming call screen"
-                    time.sleep(30)
-            if not f:
+                    #time.sleep(8)
+            if not self.f:
                 print "Address not found"
                 self.pype.network.incomingCallInterrupt[1] = False
                 self.pype.network.answerIncomingCall()
@@ -144,12 +149,14 @@ class UI():
         self.pype.network.incomingCallInterrupt[1] = True
         self.IncomingCallScreen.hide()
         self.pype.network.answerIncomingCall()
+        self.f = 0
         return
     
     def callRejectFunc(self, button):
         self.pype.network.incomingCallInterrupt[1] = False
         self.IncomingCallScreen.hide()
         self.pype.network.answerIncomingCall()
+        self.f = 0
         #self.callAnswerScreen.hide()
         return
         
@@ -206,6 +213,7 @@ class UI():
         self.numOfContacts = self.numOfContacts + 1
         self.ShowMessage("Success","Contact successfully added")
         common.saveContact(c)
+        self.contacts = common.loadContacts
         
 
         return
