@@ -54,6 +54,7 @@ class Contact:
 def saveContact(contact):
     try:
         with open(GLOBALS.contacts_file,"rb") as f:
+            print "File operation"
             unpickler = pickle.Unpickler(f)
             contact_list = unpickler.load()
             if contact_list[0].name == "none":
@@ -64,6 +65,7 @@ def saveContact(contact):
             
     except IOError:
         with open(GLOBALS.contacts_file,"wb") as f:
+            print "File operation"
             contact_list = [contact]
             pickle.dump(contact_list, f)
 
@@ -73,6 +75,7 @@ def loadContacts():
     #contact_list = []
     try:
         with open(GLOBALS.contacts_file, "rb") as f:
+            print "File operation"
             try:
                 unpickler = pickle.Unpickler(f)
                 contact_list = unpickler.load()
@@ -89,6 +92,7 @@ def loadContacts():
     except IOError:
         print "Contacts file does not exist, creating new"
         with open(GLOBALS.contacts_file,"wb") as f:
+            print "File operations"
             contact_list = [Contact("none",0,0)]
             pickle.dump(contact_list, f)
             return contact_list

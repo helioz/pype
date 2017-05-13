@@ -37,6 +37,7 @@ class AVHandler:
                        rate=self.RATE,
                        output=True,
                        frames_per_buffer=self.CHUNK)
+        exitCheck = 0
 
         while not self.callEnd:
             ret, vframe = cap.read()
@@ -52,17 +53,21 @@ class AVHandler:
             
 
             self.peer.sendMediaPacket("V"+s)
-
+            
             for i in range(4) :
                 try:
                     avdata = self.peer.recieveMediaPacket()
                 except:
+
                     continue
                 
                 if avdata == None:
+                    exitCheck = exitCheck + 1
                     continue
+                
                 print "Packet recieved"
                 if avdata[0] == "V":
+                    exitCheck = 0
                     vdata1 = avdata[1:]
                     vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
                     decimg1 = cv2.imdecode(vframe1, 1)
@@ -70,15 +75,27 @@ class AVHandler:
                     #print 'decoded :',i
                     
             
-        
                 elif avdata[0] == "A":
+                    exitCheck = 0
                     adata  = avdata[1:]
                     stream.write(adata)
 
                 elif avdata[0] == 'E':
                     self.callEnd = True
 
+                else:
+                    exitCheck = exitCheck + 1
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                self.peer.sendMediaPacket("E")
+                time.sleep(1)
+                self.peer.sendMediaPacket("E")
+                self.peer.sendMediaPacket("E")
+                self.peer.sendMediaPacket("E")
+                self.callEnd = True
+                break
+
+            if exitCheck > 100:
                 self.peer.sendMediaPacket("E")
                 time.sleep(1)
                 self.peer.sendMediaPacket("E")

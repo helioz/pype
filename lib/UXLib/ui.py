@@ -106,6 +106,7 @@ class UI():
         
     def copyPbKeyFunc(self, button):
         with open(GLOBAL.nameCard, "wb") as fp:
+            print "File operation, HDD access"
             fp.write("keyE : "+str(self.pype.crypto.public_key().e)+"\n")
             fp.write("keyN : "+str(self.pype.crypto.public_key().n))
             print "Namce card written"

@@ -34,6 +34,7 @@ class CryptoHandler:
         self.key_ring.append(key)
         try:
             with open(GLOBALS.key_ring_binary, 'wb') as fp:
+                print "File operation. Access HDD"
                 pickle.dump(self.key_ring, fp)
             print "New key added to key_ring"
         except IOError:

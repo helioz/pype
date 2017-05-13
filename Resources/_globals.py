@@ -1,5 +1,5 @@
 name = "Pype"
-version_no = "0.0.4"
+version_no = "1.0.0 RC1"
 
 MAX_Peers = 10
 
