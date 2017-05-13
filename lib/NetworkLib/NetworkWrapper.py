@@ -46,7 +46,7 @@ class NetworkHandler:
             
     def connect2peer(self, peer_addr):
         for p in self.peer_list:
-            if p[0].net_addr == peer_addr:
+            if p.net_addr == peer_addr:
                 print "connect2peer: Peer connection exists"
                 return False, p  
         self.supportServer.getcon(peer_addr)

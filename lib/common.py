@@ -186,7 +186,7 @@ class Pype:
             print "connectToFirstPeer : ",firstPeerAddr
 
             ret, firstPeer = self.network.connect2peer(firstPeerAddr)
-            if ret:  ##Why not implement the peer thread within the peer object?
+            if ret:  
                 print "First peer connected"
                 firstPeer.listenerThread =  PeerListener( firstPeer, self.network.PeerListenerThread )
                 firstPeer.listenerThread.start()

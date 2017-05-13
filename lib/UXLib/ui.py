@@ -51,7 +51,7 @@ class UI():
         self.contactCBox.add_attribute(self.contactCell, 'text', 0)
         self.contactCBox.set_model(self.contactStore)
         self.contactCBox.connect('changed', self.on_chaned)
-        self.contacts = common.loadContacts()
+        self.contactsL = common.loadContacts()
         self.fillContactCBox()
         
         self.dialogOK = self.builder.get_object("button2")
@@ -128,7 +128,7 @@ class UI():
         if self.pype.network.incomingCallInterrupt[0]:
             #self.f = 0
             #print "checking contacts"
-            for contact in self.contacts:
+            for contact in self.contactsL:
                 if self.f:
                     break
                 if self.pype.network.incomingCallInterrupt[1] == contact.h:
