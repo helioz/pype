@@ -13,7 +13,7 @@ import time
 
 
 class PeerListener(threading.Thread):
-    def __init__(self, threadID, peer, listenerFunc):
+    def __init__(self, peer, listenerFunc):
         threading.Thread.__init__(self)
         self.threadID = peer.net_addr
         self.peer = peer
@@ -23,6 +23,7 @@ class PeerListener(threading.Thread):
     def run(self):
         print "Listener running for peer :",self.peer.net_addr
         self.listenerFunc(self.peer)
+        #Find a way to remove peer from peer list
         print "Closing connection to peer :",self.peer.net_addr
         
 
@@ -104,8 +105,8 @@ class Pype:
         self.crypto = CryptoHandler()
         self.network = NetworkHandler(self.crypto)
         
-        self.peerThreads = []
-        self.thread_count = 0
+        #self.peerThreads = []
+        #self.thread_count = 0
 
         self.killFlag = False
 
@@ -138,15 +139,20 @@ class Pype:
                     ret, newPeer = self.network.connect2peer(peer)
                     #Replace thread_count with a better threadIdentification scheme, dict for example.
                     if ret: 
-                        self.peerThreads.append(PeerListener(self.thread_count, newPeer, self.network.PeerListenerThread, self.callInterrupt))
-                        self.peerThreads[self.thread_count].start()                    
-                        self.thread_count = self.thread_count + 1                    
+                        newPeer.listenerThread =  PeerListener( newPeer, self.network.PeerListenerThread )
+                        newPeer.listenerThread.start()
+
+
 
         print "runPype : peer list populated and threads running"
+
+
         
         if self.killFlag:
             return
 
+
+        
         
         print "runPype: getAddrBook"
         self.network.getAddrBook(self.network.peer_list[0])
@@ -182,9 +188,8 @@ class Pype:
             ret, firstPeer = self.network.connect2peer(firstPeerAddr)
             if ret:  ##Why not implement the peer thread within the peer object?
                 print "First peer connected"
-                self.peerThreads.append(PeerListener(self.thread_count, firstPeer, self.network.PeerListenerThread))
-                self.peerThreads[self.thread_count].start()
-                self.thread_count = self.thread_count + 1
+                firstPeer.listenerThread =  PeerListener( firstPeer, self.network.PeerListenerThread )
+                firstPeer.listenerThread.start()
                 print "First peer thread started. Success"
                 time.sleep(3)
                 return
@@ -213,9 +218,8 @@ class Pype:
                 for adr in connListNoDup:
                     ret, newPeer = self.network.connect2peer(adr)
                     if ret:
-                        self.peerThreads.append(PeerListener(self.thread_count, newPeer, self.network.PeerListenerThread))
-                        self.peerThreads[self.thread_count].start()
-                        self.thread_count = self.thread_count + 1
+                        newPeer.listenerThread =  PeerListener( newPeer, self.network.PeerListenerThread )
+                        newPeer.listenerThread.start()
                         print "Server thread makes new peer thread", newPeer
 
 

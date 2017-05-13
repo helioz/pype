@@ -160,6 +160,15 @@ class NetworkHandler:
     def PeerListenerThread(self, peer):
         try:
             while True:
+                if not peer.isPunched:
+                    self.supportServer.getcon(peer.net_addr)
+                    for t in range(G.nOfIteration):
+                        if peer.makeConnection():
+                            peer.isPunched = True
+                            break
+                    if not peer.isPunched:
+                        return
+                    
                 if self.callFlag:
                     time.sleep(5)
                     continue

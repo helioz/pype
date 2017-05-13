@@ -4,6 +4,7 @@ import socket
 import sys
 import time
 import lib.NetworkLib.network_support as netAlgo
+import threading
 
 getaddrm = 'getaddr'
 getpeerm = 'getpeer'
@@ -20,6 +21,9 @@ class Peer:
         self.net_addr = net_addr
         self.isPunched = False
 
+        self.listenerThread = None
+
+        self.holePunchThread = None
         
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -35,7 +39,8 @@ class Peer:
         except:
             print "Peer init: Bad address for peer."
             
-
+        self.holePunchThread = threading.Thread(target = self.holePunchThreadFunc)
+        self.holePunchThread.start()
         
     def __str__(self):
         return "Peer : "+self.net_addr
@@ -43,8 +48,18 @@ class Peer:
     def __repr__(self):
         return "Peer : "+self.net_addr
 
+    def holePunchThreadFunc(self):
+        while True:
+            if self.listenerThread == None:
+                time.sleep(G.NAT_timeout)
+                continue
+            elif self.listenerThread.isAlive():
+                time.sleep(G.NAT_timeout)
+                if not self.makeConnection():
+                    self.isPunched = False
+                    time.sleep(G.NAT_timeout)
 
-    
+                
     def makeConnection(self):
         
         for i in range(G.nOfIteration) :

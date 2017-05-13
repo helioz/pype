@@ -95,7 +95,7 @@ class AVHandler:
                 self.callEnd = True
                 break
 
-            if exitCheck > 100:
+            if exitCheck > 10:
                 self.peer.sendMediaPacket("E")
                 time.sleep(1)
                 self.peer.sendMediaPacket("E")

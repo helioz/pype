@@ -31,6 +31,7 @@ punchTimeout = 3
 mediaTimeOut = 0.01
 nOfIteration = 4
 waiting_time = 3
+NAT_timeout = 50
 
 
 #Network Codes
