@@ -40,7 +40,7 @@ class NetworkHandler:
             peer.sendTextPacket(G.call_ready)
             self.callFlag = True
             self.incomingCallInterrupt = [False, False, 0]
-            print "Calling done"
+            AVHandler(peer).callAV()
             self.callFlag = False
 
             
@@ -128,6 +128,7 @@ class NetworkHandler:
                 return "Peer rejected call"
             elif reply == G.call_ready:
                 self.callFlag = True
+                AVHandler(peer).callAV()
                 print "Call done"
                 #makeCallFunc()
                 self.callFlag = False
