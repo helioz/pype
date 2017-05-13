@@ -22,6 +22,7 @@ class UI():
         
         self.HomeScreen = self.builder.get_object("HomeScreen")
         self.HomeScreen.connect('delete-event', self.on_delete_event)
+        self.HomeScreen.set_icon_from_file("Resources/Icons/icon.png")
         
         self.AddContactScreen = self.builder.get_object("AddContactScreen")
 
@@ -94,7 +95,7 @@ class UI():
         self.HomeScreen.show_all()
 
         
-        self.pype.runPype()
+        #self.pype.runPype()
         Gtk.main()
         
 
