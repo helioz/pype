@@ -3,7 +3,7 @@ import gi
 import Resources._globals as GLOBAL
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import lib.DataStructures.common as common
+import lib.common as common
 from lib.AVLib.AVWrapper import AVHandler
 import threading
 import time
