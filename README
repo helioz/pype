@@ -1,30 +1,8 @@
 pype
 ===================================================
-An open source peer to peer video chatting platform.
+An open source, decentralised peer to peer video chatting tool.
 
 
-Design choices
-==================================================
-UX design using gtk
-Languages to use: python, and java
-Python, because most p2p libraries use python
-Java, because we would like to learn it better.
-
-
-git commands
-=================================================
-Initial commit
-git init
-git add <filename>
-git commit -m "Commit message"
-git remote add origin https://github.com/helioz/pype.git
-git push -u origin master
-
-
-Regular commits
-git add <filename>
-git commit -m "Commit message"
-git push -u origin master
 
 Development guidelines:
 ==================================================
@@ -36,27 +14,6 @@ Development guidelines:
 
 *All code relating to the support server is to be added in the 'pypeServer' folder.
 
-A list of available STUN server.
-=====================================
-stun.l.google.com:19302
-stun1.l.google.com:19302
-stun2.l.google.com:19302
-stun3.l.google.com:19302
-stun4.l.google.com:19302
-stun01.sipphone.com
-stun.ekiga.net
-stun.fwdnet.net
-stun.ideasip.com
-stun.iptel.org
-stun.rixtelecom.se
-stun.schlund.de
-stunserver.org
-stun.softjoys.com
-stun.voiparound.com
-stun.voipbuster.com
-stun.voipstunt.com
-stun.voxgratia.org
-stun.xten.com
 
 
 Reading materials and guides
