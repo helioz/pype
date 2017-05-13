@@ -99,8 +99,8 @@ class Peer:
             return False
 
         
-    def recieveTextPacket(self):
-        self.s.settimeout(G.punchTimeout)
+    def recieveTextPacket(self, timeout = G.punchTimeout):
+        self.s.settimeout(timeout)
 	try:
 	    data_bStream = self.s.recv(G.packet_maxsize)
 	    if data_bStream != 'punched' and data_bStream != 'punch' and data_bStream != None :

@@ -126,7 +126,7 @@ class UI():
         #print "Checking interrupt", self.pype.network.incomingCallInterrupt[0]
         if self.pype.network.incomingCallInterrupt[0]:
             #self.f = 0
-            print "checking contacts"
+            #print "checking contacts"
             for contact in self.contacts:
                 if self.f:
                     break

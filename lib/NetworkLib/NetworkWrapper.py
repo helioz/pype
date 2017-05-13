@@ -31,8 +31,12 @@ class NetworkHandler:
             peer = self.incomingCallInterrupt[2]
             if self.incomingCallInterrupt[1] == False:
                 peer.sendTextPacket(G.call_reject)
+                peer.sendTextPacket(G.call_reject)
+                peer.sendTextPacket(G.call_reject)
                 self.incomingCallInterrupt = [False, False, 0]
                 return
+            peer.sendTextPacket(G.call_ready)
+            peer.sendTextPacket(G.call_ready)
             peer.sendTextPacket(G.call_ready)
             self.callFlag = True
             self.incomingCallInterrupt = [False, False, 0]
@@ -118,7 +122,7 @@ class NetworkHandler:
             peer.sendTextPacket(G.call_req )
             peer.recieveTextPacket()
             peer.sendTextPacket('Call'+hash_addr_self + G.separator + hash_addr_other)
-            reply = peer.recieveTextPacket()
+            reply = peer.recieveTextPacket(20)
             if reply == G.call_reject:
                 print "Peer rejected call"
                 return "Peer rejected call"
@@ -178,7 +182,7 @@ class NetworkHandler:
                     if AddrBookDelta_u[0] == 'D':
                         AddrBookDelta_u = AddrBookDelta_u[1:]
                         AddrBookDelta = pickle.loads(AddrBookDelta_u)
-                        print "Peer listener: AddrBookDelta recieved:", AddrBookDelta
+                        #print "Peer listener: AddrBookDelta recieved:", AddrBookDelta
                         self.addToAddrBook(AddrBookDelta)
                         print "PeerListener: Address Book delta updated"
                     
