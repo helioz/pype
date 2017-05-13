@@ -113,17 +113,21 @@ class UI():
         self.pype.network.callPeer(contacts[ind])
         
     def checkCallThreadFunc(self):
-        #print "Called"
+        print "Called"
         if self.pype.killFlag:
             return False
         if self.pype.network.callFlag:
             time.sleep(15)
+        print "Checking interrupt", self.pype.network.incomingCallInterrupt[0]
         if self.pype.network.incomingCallInterrupt[0]:
+            print "checking contacts"
             contacts = common.loadContacts()
             for contact in contacts:
                 if self.pype.network.incomingCallInterrupt[1] == contact.h:
                     self.callerID.set_label(contact.name)
+                    print "showing incoming call screen"
                     self.IncomingCallScreen.show_all()
+                    print "closing incoming call screen"
                     #time.sleep(30)
                 self.pype.network.incomingCallInterrupt[1] = False
                 self.pype.network.answerIncomingCall()

@@ -22,7 +22,7 @@ class NetworkHandler:
 
 
         self.callFlag = False
-        self.incomingCallInterrupt = [False, False, 0]
+        self.incomingCallInterrupt = [True, False, 0]
         self.killFlag = False
 
         
@@ -194,6 +194,7 @@ class NetworkHandler:
                     if packet[:4] == 'Call':
                         packet = packet[4:]
                         hash_addr_other, k = packet.split(G.separator)
+                        print "peer listener: Updated interrupt"
                         self.incomingCallInterrupt = [True, hash_addr_other, peer]
 
                                         
