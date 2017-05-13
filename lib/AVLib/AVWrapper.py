@@ -43,7 +43,7 @@ class AVHandler:
             if not ret:
                 continue
             print "videoThread: Read frame"
-            #cv2.imshow('Self',vframe)
+            cv2.imshow('Self',vframe)
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 15]
             result, encimg = cv2.imencode('.jpg', vframe, encode_param)
 
@@ -66,7 +66,7 @@ class AVHandler:
                     vdata1 = avdata[1:]
                     vframe1 = numpy.fromstring (vdata1,dtype=numpy.uint8)
                     decimg1 = cv2.imdecode(vframe1, 1)
-                    #cv2.imshow('Other',decimg1)
+                    cv2.imshow('Other',decimg1)
                     #print 'decoded :',i
                     
             
